@@ -1,0 +1,1414 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ecología cultural</title>
+<link id="tipos" rel="stylesheet" media="print" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400..700&amp;family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&amp;display=swap">
+<style>
+/* Un mundo, no diapositivas: paisaje por capas con paralaje (cielo, sol, nubes, cerros, milpa) y el contenido
+   flotando encima en vidrio, todo dentro de UNA perspectiva. Lienzo lógico 1920×1080 escalado a la ventana. */
+:root{
+  color-scheme:dark;
+  --bosque-0:#0B2620; --bosque-1:#123A2E; --bosque-2:#1C5740;
+  --crema:#F5EFDF; --ocre:#F4B851; --ocre-2:#E9A23B; --terracota:#A8481F; --hoja:#7FB069; --noche:#030B0C;
+  --f-titulo:'Fraunces',Georgia,'Times New Roman',serif;
+  --f-texto:'DM Sans',system-ui,'Segoe UI',Arial,sans-serif;
+  --f-emoji:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;
+}
+html{height:100%;box-sizing:border-box;background:#030B0C}
+body{height:100%;margin:0;position:relative;overflow:hidden;background:#030B0C;color:#F5EFDF;font-family:var(--f-texto)}
+#marco{position:absolute;inset:0;overflow:hidden;background:#030B0C;touch-action:manipulation}
+#lienzo{position:absolute;left:50%;top:50%;width:1920px;height:1080px;margin:-540px 0 0 -960px;transform-origin:50% 50%;
+  overflow:hidden;background:#061B22;color:#F5EFDF;font-family:var(--f-texto);font-size:30px;line-height:1.3;
+  cursor:default;-webkit-user-select:none;user-select:none;outline:none;-webkit-font-smoothing:antialiased}
+:where(#lienzo) :where(p,h1,h2,h3){margin:0}
+
+/* ================= MUNDO ================= */
+#mundo,#frente,#velo,#grano{position:absolute;inset:0;pointer-events:none}
+#mundo{overflow:hidden;--c1:#02080D;--c2:#051419;--c3:#0A2327;--c4:#16312F;--bruma:10 32 34;--nube:27 47 56;--sol:#F4B851;
+  --halo:233 162 59;--ha:0;--osc:.5;--est:.95;--ray:0;--vent:1}
+#mundo-g,#frente-g{position:absolute;inset:0;transform-origin:50% 56%;will-change:transform}
+#cielo{position:absolute;left:-260px;right:-260px;top:-200px;height:1120px;
+  background:linear-gradient(180deg,var(--c1) 0px,var(--c1) 190px,var(--c2) 500px,var(--c3) 672px,var(--c4) 838px,var(--c4) 100%)}
+#estrellas{position:absolute;left:0;top:0;width:2px;height:2px;border-radius:50%;opacity:var(--est)}
+#halo{position:absolute;left:0;top:0;width:2200px;height:2200px;margin:-1100px 0 0 -1100px;border-radius:50%;will-change:transform;
+  background:radial-gradient(circle,rgb(var(--halo) / calc(var(--ha) * .95)) 0%,rgb(var(--halo) / calc(var(--ha) * .52)) 8%,
+    rgb(var(--halo) / calc(var(--ha) * .24)) 20%,rgb(var(--halo) / calc(var(--ha) * .08)) 38%,rgb(var(--halo) / 0) 60%)}
+#rayos{position:absolute;left:0;top:0;width:2400px;height:2400px;margin:-1200px 0 0 -1200px;opacity:var(--ray);will-change:transform}
+#rayos i{position:absolute;inset:0;border-radius:50%;
+  background:repeating-conic-gradient(from 0deg,rgb(var(--halo) / 0) 0deg,rgb(var(--halo) / .13) 5deg,rgb(var(--halo) / 0) 11deg,
+    rgb(var(--halo) / 0) 19deg,rgb(var(--halo) / .07) 23deg,rgb(var(--halo) / 0) 30deg);
+  -webkit-mask:radial-gradient(circle,#000 0%,rgba(0,0,0,.6) 16%,rgba(0,0,0,0) 56%);mask:radial-gradient(circle,#000 0%,rgba(0,0,0,.6) 16%,rgba(0,0,0,0) 56%);
+  animation:gira 280s linear infinite;animation-delay:calc(var(--T,0) * -1s)}
+#sol{position:absolute;left:0;top:0;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;will-change:transform;
+  background:radial-gradient(circle at 50% 44%,#FFFDF2 0%,var(--sol) 48%,rgb(var(--halo)) 96%);
+  box-shadow:0 0 60px 14px rgb(var(--halo) / .55),0 0 170px 60px rgb(var(--halo) / .26)}
+.capa{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+.capa svg{display:block;overflow:visible}
+.capa .vent{opacity:var(--vent)}
+.nubes i{position:absolute;border-radius:50%;
+  background:radial-gradient(ellipse at 50% 50%,rgb(var(--nube) / .95) 0%,rgb(var(--nube) / .5) 42%,rgb(var(--nube) / 0) 70%)}
+.bruma{position:absolute;left:-260px;right:-260px;height:470px;
+  background:linear-gradient(to top,rgb(var(--bruma) / var(--a)) 0%,rgb(var(--bruma) / var(--a)) 34%,rgb(var(--bruma) / 0) 100%)}
+.planta{position:absolute;bottom:0;transform-origin:50% 100%;filter:blur(1.4px);
+  animation:mece var(--dur,5.2s) ease-in-out infinite;animation-delay:calc(var(--fase,0s) - var(--T,0) * 1s)}
+.follaje{position:absolute;filter:blur(7px);transform-origin:50% 100%;
+  animation:mece var(--dur,6.4s) ease-in-out infinite;animation-delay:calc(var(--fase,0s) - var(--T,0) * 1s)}
+.follaje.rama{transform-origin:70% 0%}
+#oscuro{position:absolute;inset:-80px;background:#02090E;opacity:var(--osc)}
+#calor{position:absolute;inset:-80px;opacity:0;
+  background:linear-gradient(to top,rgba(168,72,31,.60) 0%,rgba(226,112,58,.30) 45%,rgba(244,184,81,.10) 78%,rgba(244,184,81,0) 100%)}
+#polen,#hojas{position:absolute;left:0;top:0;width:1920px;height:1080px}
+#velo{background:
+  linear-gradient(180deg,rgba(3,14,16,.66) 0px,rgba(3,14,16,.40) 170px,rgba(3,14,16,.12) 320px,rgba(3,14,16,0) 430px),
+  radial-gradient(ellipse 78% 74% at 50% 48%,rgba(3,11,12,0) 56%,rgba(3,11,12,.50) 100%)}
+#grano{visibility:hidden;opacity:0;mix-blend-mode:overlay;background-size:256px 256px;transition:opacity .8s ease,visibility 0s .8s}
+.fino #grano{visibility:visible;opacity:.075;transition:opacity .8s ease}
+@keyframes gira{to{rotate:360deg}}
+@keyframes mece{0%,100%{rotate:-1.3deg}50%{rotate:1.7deg}}
+
+/* ================= CONTENIDO ================= */
+#escena{position:absolute;inset:0}
+.lamina{position:absolute;inset:0;display:none;perspective:1500px;perspective-origin:50% 44%;transform-origin:50% 48%}
+.lamina.viva{display:block}
+.lamina.sale{pointer-events:none}
+.cuerpo{position:absolute;inset:0;box-sizing:border-box;padding:84px 128px 0;display:flex;flex-direction:column;align-items:flex-start;
+  transform-style:preserve-3d;transform-origin:50% 46%}
+.g3d,.vidrio,.moneda,.cuerpo h1,.cuerpo h2,.palabra{transform-style:preserve-3d}
+.pal,.let{display:inline-block;transform-origin:50% 78%}
+.palabra{display:inline-block;white-space:nowrap}
+.emo,.disco i,.m-cara i{font-family:var(--f-emoji);font-style:normal;font-weight:400}
+
+.kicker{font-size:26px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#F4B851;text-shadow:0 2px 14px rgba(3,11,12,.75)}
+.cuerpo h2{margin-top:16px;font-family:var(--f-titulo);font-size:96px;font-weight:600;line-height:1.03;letter-spacing:-1.5px;color:#F5EFDF;
+  text-wrap:balance;max-width:1664px;
+  text-shadow:0 1px 0 #0B2620,0 2px 0 #0A231D,0 3px 0 #081D18,0 4px 0 #061713,0 16px 36px rgba(3,11,12,.6)}
+
+/* --- vidrio --- */
+.vidrio{position:relative;border-radius:26px;--o:1;--b:0px}
+.vidrio>.cara{position:relative;box-sizing:border-box;height:100%;border-radius:inherit;padding:22px 30px;color:#F5EFDF;overflow:hidden;
+  background:linear-gradient(140deg,rgba(18,56,44,.80) 0%,rgba(10,36,30,.84) 46%,rgba(6,24,20,.88) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,240,205,.30),inset 0 -24px 36px -24px rgba(0,0,0,.42);
+  opacity:var(--o);filter:blur(var(--b));transition:-webkit-backdrop-filter .8s ease,backdrop-filter .8s ease}
+/* calidad «fino» (el motor la activa solo si el equipo sostiene el ritmo): el vidrio se esmerila y entra el grano */
+.fino .vidrio>.cara{-webkit-backdrop-filter:blur(16px) saturate(1.35);backdrop-filter:blur(16px) saturate(1.35)}
+.vidrio.lista>.cara{filter:none}
+.vidrio>.cara::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;
+  background:linear-gradient(var(--luz,128deg),rgba(255,233,180,.95) 0%,rgba(255,255,255,.18) 26%,rgba(255,255,255,.05) 58%,rgba(127,176,105,.45) 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
+.vidrio>.cara::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(118deg,rgba(255,255,255,.06) 0%,rgba(255,255,255,.02) 20%,rgba(255,255,255,0) 38%)}
+.vidrio>.canto{position:absolute;inset:0;box-sizing:border-box;border-radius:inherit;border:2px solid rgba(190,235,212,.22);opacity:var(--o);pointer-events:none}
+.vidrio>.canto{transform:translateZ(-14px);box-shadow:0 38px 62px -22px rgba(0,0,0,.62),0 12px 22px -8px rgba(0,0,0,.38)}
+.vidrio .brillo{position:absolute;top:-20%;bottom:-20%;left:0;width:34%;pointer-events:none;opacity:0;
+  background:linear-gradient(100deg,rgba(255,244,214,0) 0%,rgba(255,244,214,.34) 45%,rgba(255,255,255,.62) 50%,rgba(255,244,214,.34) 55%,rgba(255,244,214,0) 100%)}
+.vidrio b{font-weight:700;color:#FFD98A}
+
+.disco{display:grid;place-items:center;width:80px;height:80px;border-radius:50%;opacity:var(--o);
+  background:radial-gradient(circle at 34% 28%,#FFF6DA 0%,var(--dc,#F4B851) 40%,var(--dc2,#B8771F) 100%);
+  box-shadow:inset 0 2px 1px rgba(255,255,255,.65),inset 0 -8px 14px rgba(60,30,0,.35),0 12px 20px -4px rgba(0,0,0,.6),0 2px 4px rgba(0,0,0,.4)}
+.disco i{font-size:44px;line-height:1;filter:drop-shadow(0 3px 3px rgba(40,20,0,.35))}
+.vidrio>.disco.fuera{position:absolute;transform:translateZ(30px)}
+
+/* --- portada --- */
+.portada::before,.sombra::before{content:"";position:absolute;inset:0;pointer-events:none;   /* sombra suave detrás del bloque del título: el sol queda a la derecha */
+  background:radial-gradient(ellipse 1240px 720px at 430px 330px,rgba(3,14,16,.72) 0%,rgba(3,14,16,.58) 48%,rgba(3,14,16,0) 100%)}
+.portada .cuerpo{padding-top:92px}
+.titulazo{font-family:var(--f-titulo);font-size:200px;font-weight:700;font-variation-settings:'opsz' 60;line-height:.9;letter-spacing:-4px;color:#F7F1E1;white-space:nowrap;
+  --ex:-8px;--ey:4px;
+  text-shadow:calc(var(--ex) * .125) calc(var(--ey) * .125) 0 #F4B851,calc(var(--ex) * .25) calc(var(--ey) * .25) 0 #EFAA44,
+    calc(var(--ex) * .375) calc(var(--ey) * .375) 0 #E9A23B,calc(var(--ex) * .5) calc(var(--ey) * .5) 0 #DB8C33,
+    calc(var(--ex) * .625) calc(var(--ey) * .625) 0 #CB742B,calc(var(--ex) * .75) calc(var(--ey) * .75) 0 #BA5D24,
+    calc(var(--ex) * .875) calc(var(--ey) * .875) 0 #A8481F,var(--ex) var(--ey) 0 #86391A,
+    calc(var(--ex) * 2.4) calc(var(--ey) * 4 + 10px) 30px rgba(2,9,10,.62)}
+.titulazo .let{position:relative}
+.sub{margin-top:38px;font-size:30px;font-weight:700;letter-spacing:7px;text-transform:uppercase;color:#FFCB6B;text-shadow:0 2px 14px rgba(3,11,12,.8)}
+.cita{margin-top:36px;width:1030px}
+.cita>.cara{padding:26px 36px}
+.cita p{font-family:var(--f-titulo);font-style:italic;font-weight:400;font-size:36px;line-height:1.35;color:#F3EEDF}
+.datos{position:absolute;left:128px;bottom:118px;max-width:1664px;border-radius:22px}
+.datos>.cara{padding:16px 30px}
+.datos p{font-size:28px;line-height:1.5;color:#E9E3D2}
+.datos .campo{white-space:nowrap}
+.datos .pto{display:inline-block;margin:0 14px;color:#F4B851}
+.editable{display:inline-block;min-width:1.4em;padding:0 8px;border-bottom:2px dashed rgba(244,184,81,.75);color:#FFF6DC;font-weight:700;
+  cursor:text;-webkit-user-select:text;user-select:text;outline:none;white-space:normal;border-radius:4px 4px 0 0}
+.editable:empty::before{content:attr(data-ph);color:rgba(245,239,223,.78);font-weight:500}
+.editable:hover,.editable:focus{background:rgba(244,184,81,.18)}
+.editable:focus{border-bottom-style:solid}
+
+/* --- ¿qué es? --- */
+.entrada{margin-top:24px;width:1500px;border-radius:22px}
+.entrada>.cara{padding:18px 30px}
+.entrada p{font-size:36px;line-height:1.34}
+.rejilla{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:22px 26px;width:1664px;margin-top:26px}
+.item{height:134px}
+.item>.cara{display:flex;align-items:center;padding:14px 26px 14px 124px}
+.item p{font-size:33px;font-weight:600;line-height:1.2}
+.item>.disco.fuera{left:24px;top:50%;margin-top:-40px}
+.idea{margin-top:28px;width:1664px}
+.idea>.cara{display:flex;align-items:center;gap:34px;padding:26px 38px;
+  background:linear-gradient(140deg,rgba(22,66,50,.82) 0%,rgba(11,40,33,.85) 46%,rgba(6,24,20,.89) 100%)}
+.etq{flex:none;font-size:26px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#FFCB6B;white-space:nowrap}
+.idea p:not(.etq){font-size:36px;line-height:1.28}
+
+/* --- ¿cómo se produce? --- */
+.flujo{position:relative;width:1664px;height:356px;margin-top:26px}
+.paso{position:absolute;width:272px;height:236px}
+.paso.p1{left:0;top:72px}.paso.p2{left:348px;top:54px}.paso.p3{left:696px;top:36px}.paso.p4{left:1044px;top:18px}.paso.p5{left:1392px;top:0}
+.paso>.cara{display:flex;align-items:center;justify-content:center;text-align:center;padding:132px 14px 16px;
+  box-shadow:inset 0 4px 0 var(--dc),inset 0 -24px 36px -24px rgba(0,0,0,.42)}
+.paso p{font-size:28px;font-weight:700;line-height:1.2}
+.paso>.disco.fuera{left:50%;top:22px;width:104px;height:104px;margin-left:-52px}
+.paso>.disco i{font-size:56px}
+.flechas{position:absolute;left:0;top:0;width:1664px;height:356px;overflow:visible;transform:translateZ(1px)}
+.flechas .pista{fill:none;stroke:rgba(6,20,16,.78);stroke-width:18;stroke-linecap:round}
+.flechas .relleno{fill:none;stroke:url(#calor-g);stroke-width:12;stroke-linecap:round}
+.flechas .punta-calor{fill:#FFF3D0;filter:drop-shadow(0 0 10px #F4B851) drop-shadow(0 0 22px #E9853B)}
+.flechas .trazo{fill:none;stroke:var(--col);stroke-width:7;stroke-linecap:round}
+.flechas .punta{fill:var(--col)}
+.rotulo{margin-top:26px;padding:6px 18px;border-radius:12px;background:rgba(5,18,14,.88);
+  font-size:26px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#FFCB6B}
+.pastillas{display:grid;grid-template-columns:repeat(var(--n,3),1fr);gap:16px 22px;width:1664px;margin-top:16px}
+.pastilla{border-radius:999px}
+.pastilla>.cara{padding:13px 28px 13px 24px}
+.pastilla p{font-size:32px;font-weight:600;white-space:nowrap}
+.pastilla .emo{margin-right:8px;font-size:34px}
+
+/* --- tres pilares --- */
+.pilares{position:relative;width:1664px;height:520px;margin-top:22px}
+.orbita{position:absolute;left:302px;top:-12px;width:1060px;height:266px;overflow:visible;transform:rotateX(56deg)}
+.orbita .o-base{fill:none;stroke:url(#orbita-g);stroke-width:9;stroke-linecap:round;filter:drop-shadow(0 0 9px rgba(244,184,81,.6))}
+.orbita .o-guion{fill:none;stroke:#FFF8E2;stroke-width:4.5;stroke-linecap:round;stroke-dasharray:3 29}
+.orbita .o-cometa{fill:#FFF6DA;filter:drop-shadow(0 0 8px #F4B851) drop-shadow(0 0 18px #F4B851)}
+.moneda{position:absolute;width:212px;height:212px;--o:1;animation:late 4.4s ease-in-out infinite;animation-delay:calc(var(--fase,0s) - var(--T,0) * 1s)}
+.moneda>*{position:absolute;inset:0;border-radius:50%;opacity:var(--o)}
+.moneda>.m-cara{display:grid;place-items:center;
+  background:radial-gradient(circle at 32% 26%,var(--m0) 0%,var(--m1) 44%,var(--m2) 100%);
+  box-shadow:inset 0 3px 2px rgba(255,255,255,.55),inset 0 -16px 24px rgba(0,0,0,.30),inset 0 0 0 7px rgba(255,255,255,.12)}
+.moneda>.m-cara i{font-size:104px;line-height:1;filter:drop-shadow(0 6px 6px rgba(0,0,0,.35))}
+.moneda>.m-canto{background:var(--m3)}
+.moneda>.m-aura{inset:-40px;background:radial-gradient(circle,var(--m1) 0%,rgba(0,0,0,0) 68%);opacity:calc(var(--o) * .5);transform:translateZ(-30px)}
+.moneda>.m-sombra{inset:auto 6% -46px 6%;height:44px;background:radial-gradient(ellipse,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 70%);transform:translateZ(-70px)}
+.ma{left:238px;top:26px;--m0:#D9F0C8;--m1:#5FA06A;--m2:#1F5540;--m3:#123A2E;--fase:0s}
+.mb{left:726px;top:94px;--m0:#FFF3CF;--m1:#F4B851;--m2:#C07A1C;--m3:#8C5512;--fase:-1.4s}
+.mc{left:1214px;top:26px;--m0:#FFD9BF;--m1:#D0623A;--m2:#8A3414;--m3:#5E220C;--fase:-2.8s}
+.ficha{position:absolute;width:456px}
+.ficha>.cara{padding:20px 26px 22px;text-align:center;
+  background:linear-gradient(140deg,rgba(20,60,47,.78) 0%,rgba(10,36,30,.82) 46%,rgba(6,24,20,.86) 100%)}
+.ficha h3{font-family:var(--f-texto);font-size:30px;font-weight:700;letter-spacing:4px;text-transform:uppercase;line-height:1.2}
+.ficha p{margin-top:8px;font-size:30px;line-height:1.26}
+.fa{left:74px;top:236px}.fa h3{color:#B9E2A5}
+.fb{left:604px;top:306px}.fb h3{color:#FFCB6B}
+.fc{left:1134px;top:236px}.fc h3{color:#F8B894}
+.aviso{margin-top:18px;width:1664px}
+.aviso>.cara{display:flex;align-items:center;gap:26px;padding:22px 38px;
+  background:linear-gradient(140deg,rgba(22,66,50,.82) 0%,rgba(11,40,33,.85) 46%,rgba(6,24,20,.89) 100%)}
+.aviso .emo-g{font-size:46px;line-height:1}
+.aviso p:not(.emo-g){font-size:36px;line-height:1.28}
+@keyframes late{0%,100%{scale:1}50%{scale:1.045}}
+
+/* ================= esquemas de las otras 27 (reusan vidrio, disco, pastilla, aviso e idea) ================= */
+.pastillas.p6 .pastilla>.cara{padding:13px 10px;text-align:center}
+.pastillas.p6 .pastilla p{font-size:30px}
+.entrada.ancha{width:1664px}
+.entrada.corta{width:auto}
+/* (a) dúo: dos paneles enfrentados con renglones */
+.duo{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:26px;width:1664px;margin-top:24px}
+.duo.d3{grid-template-columns:1.2fr 1fr}
+.duo.d4{grid-template-columns:1fr 1.45fr}
+.duo.con-vs{gap:118px}
+.panel>.cara,.enunciado>.cara{padding:24px 34px 26px}
+.panel h3{margin-bottom:10px;font-family:var(--f-texto);font-size:30px;font-weight:700;letter-spacing:3px;text-transform:uppercase;line-height:1.2;color:#FFCB6B}
+.panel h3 .emo{margin-right:6px;font-size:36px;letter-spacing:0}
+.ren{display:flex;align-items:center;gap:16px;padding:7px 0;font-size:31px;font-weight:600;line-height:1.22}
+.ren .emo{flex:none;width:46px;text-align:center;font-size:34px}
+.ren .num{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:#F4B851;color:#0B2620;font-size:28px;font-weight:800}
+.ren span{font-weight:500}
+.rens2{display:grid;grid-template-columns:1fr 1fr;column-gap:22px}
+.panel .txt{font-size:33px;line-height:1.3}
+.panel .txt+.rens{margin-top:10px}
+.gen{font-size:64px;line-height:1.1}
+.panel .gen{margin-bottom:8px}
+.enunciado .gen{margin:14px 0}
+.gen b{margin:0 14px;font-size:48px;color:#F4B851}
+.ecu{margin-bottom:10px;font-family:var(--f-titulo);font-size:54px;font-weight:600;line-height:1.15}
+.ecu b,.cad b,.cadena b{color:#F4B851}
+.cad{font-size:36px;font-weight:700;line-height:1.3}
+.cad b{margin:0 10px}
+.alto .ren{padding:12px 0;font-size:35px}
+.tiempo{margin-top:12px;font-size:30px;font-weight:700;color:#FFCB6B}
+.vs{position:absolute;left:50%;top:50%;width:104px;height:104px;margin:-52px 0 0 -52px;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--f-titulo);font-size:76px;font-weight:700;line-height:1;color:#0B2620;
+  background:radial-gradient(circle at 34% 28%,#FFF6DA 0%,#F4B851 40%,#B8771F 100%);
+  box-shadow:inset 0 2px 1px rgba(255,255,255,.65),inset 0 -8px 14px rgba(60,30,0,.35),0 14px 24px -4px rgba(0,0,0,.6)}
+/* (b) enunciado grande y cadena de pasos */
+.enunciado{margin-top:24px;width:1664px}
+.duo .enunciado{margin-top:0;width:auto}
+.enunciado p{font-family:var(--f-titulo);font-size:44px;font-weight:500;line-height:1.24}
+.enunciado p+p{margin-top:12px;font-family:var(--f-texto);font-size:33px;font-weight:400;line-height:1.3}
+.enunciado p.gen{font-family:var(--f-texto);font-size:64px}
+.enunciado span,.aviso span,.res{color:#FFD98A}
+.cadena{margin-top:22px}
+.cadena p:not(.etq){font-size:36px;font-weight:700;line-height:1.3}
+.cadena b{margin:0 6px}
+.cadena.larga>.cara{flex-direction:column;align-items:flex-start;gap:8px}
+.cadena.larga p:not(.etq){font-size:34px}
+.cadena.tenue p:not(.etq){color:#DAD4C4;font-weight:600}
+/* (c) pregunta o cita grande */
+.pregunta{margin-top:24px;width:1664px}
+.pregunta>.cara{padding:26px 44px 30px;background:linear-gradient(140deg,rgba(22,66,50,.82) 0%,rgba(11,40,33,.85) 46%,rgba(6,24,20,.89) 100%)}
+.pregunta .q{margin-top:6px;font-family:var(--f-titulo);font-style:italic;font-weight:500;font-size:46px;line-height:1.2}
+.pregunta.grande .q{font-size:60px}
+.pregunta.cita2{margin-top:44px;width:1500px}
+.cita2 .q{font-size:42px;line-height:1.3}
+.aviso.grande p:not(.emo-g){font-family:var(--f-titulo);font-size:48px;font-weight:500}
+/* (d) columnas de tarjetas altas */
+.columnas{position:relative;display:grid;grid-template-columns:repeat(var(--n,3),1fr);gap:22px;width:1664px;margin-top:24px}
+.col>.cara{padding:112px 22px 22px;text-align:center}
+.col>.disco.fuera{left:50%;top:20px;margin-left:-40px}
+.col h3{font-family:var(--f-texto);font-size:29px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;line-height:1.2;color:#FFCB6B}
+.col p{margin-top:8px;font-size:30px;line-height:1.25}
+.col ul{margin:10px 0 0;padding:0;list-style:none;text-align:left}
+.col li{position:relative;padding:5px 0 5px 26px;font-size:28px;line-height:1.24}
+.col li::before{content:"";position:absolute;left:3px;top:17px;width:10px;height:10px;border-radius:50%;background:#7FB069}
+.mini .col>.cara{padding:106px 10px 18px}
+.mini .col p{margin-top:0;font-size:28px;font-weight:600;line-height:1.2}
+.col.sig>.cara{padding:22px 26px 24px;text-align:left}
+.sig h3{font-size:46px;letter-spacing:1px;text-transform:none}
+.sig p{font-size:29px}
+.col.gde>.cara{padding-top:152px}
+.col.gde>.disco.fuera{top:22px;width:116px;height:116px;margin-left:-58px}
+.gde>.disco i{font-size:62px}
+.gde h3{font-size:34px}
+.columnas.ancho{gap:74px}
+.col.enlace::before{content:"↔";position:absolute;left:-65px;top:50%;width:56px;height:56px;margin-top:-28px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(5,18,14,.9);color:#FFCB6B;font:700 34px/1 var(--f-texto);box-shadow:inset 0 0 0 1.5px rgba(244,184,81,.5);opacity:var(--o);transform:translateZ(8px)}
+.titulazo.t2{margin-top:22px;font-size:116px;line-height:1;letter-spacing:-2px}
+
+/* tarjetas con rótulo de color (ocre, hoja, terracota): velo más cerrado para que el rótulo se lea sobre cualquier cielo */
+.idea>.cara,.aviso>.cara,.ficha>.cara,.pregunta>.cara,.panel>.cara,.col>.cara{background:linear-gradient(140deg,rgba(16,50,40,.88) 0%,rgba(9,34,28,.90) 46%,rgba(5,20,17,.93) 100%)}
+/* título de dos renglones: sombra suave detrás (el segundo renglón baja a la franja de nubes) */
+.titulo2::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 1700px 430px at 800px 215px,rgba(3,14,16,.76) 0%,rgba(3,14,16,.62) 50%,rgba(3,14,16,0) 100%)}
+
+/* ================= HUD ================= */
+#hud{position:absolute;inset:0;pointer-events:none;font-size:26px;line-height:1.2}
+#pie{position:absolute;left:128px;bottom:38px;font-weight:500;color:rgba(245,239,223,.9);text-shadow:0 2px 10px rgba(3,11,12,.9),0 0 3px rgba(3,11,12,.9)}
+#cuenta{position:absolute;right:128px;bottom:38px;font-weight:500;font-variant-numeric:tabular-nums;color:rgba(245,239,223,.9);
+  text-shadow:0 2px 10px rgba(3,11,12,.9),0 0 3px rgba(3,11,12,.9)}
+#cuenta b{font-weight:700;color:#F4B851}
+#avance{position:absolute;left:0;right:0;bottom:0;height:6px;background:rgba(245,239,223,.14)}
+#avance i{display:block;width:100%;height:100%;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,#7FB069 0%,#F4B851 60%,#E9A23B 100%)}
+#ayuda{position:absolute;left:50%;bottom:30px;transform:translateX(-50%);padding:10px 28px;border-radius:999px;white-space:nowrap;
+  background:rgba(5,18,15,.86);color:#F5EFDF;box-shadow:inset 0 0 0 1.5px rgba(244,184,81,.4);opacity:0;transition:opacity .7s}
+#ayuda.ver{opacity:1}
+#ayuda b{color:#F4B851;font-weight:700}
+#notas{position:absolute;left:160px;right:160px;bottom:92px;padding:26px 36px 30px;border-radius:24px;background:rgba(5,18,15,.95);
+  box-shadow:inset 0 0 0 1.5px rgba(244,184,81,.55),0 30px 80px rgba(0,0,0,.6);color:#F5EFDF;font-size:30px;line-height:1.42;cursor:auto}
+#notas .etq{margin-bottom:8px}
+
+/* ================= modos ================= */
+.congelado *,.congelado *::before,.congelado *::after{animation-play-state:paused !important}
+.rm .planta,.rm .follaje,.rm #rayos i,.rm .moneda{animation:none}
+.bajo .planta,.bajo .follaje{filter:none;animation:none}
+.bajo .moneda{animation:none}
+.bajo #rayos,.bajo .canto,.bajo .m-canto,.bajo .m-aura{display:none}
+.sin-texto .lamina *,.sin-texto #hud *{color:transparent !important;text-shadow:none !important}
+.sin-texto .editable:empty::before{color:transparent !important}
+.sin-texto .emo,.sin-texto .disco i,.sin-texto .m-cara i{visibility:hidden}
+</style>
+</head>
+<body>
+<div id="marco">
+<div id="lienzo">
+  <div id="mundo"><div id="mundo-g"></div></div>
+  <div id="velo"></div>
+  <div id="escena">
+<!--
+  LÁMINAS (datos). Una lámina = un <section class="lamina">. El motor no se toca para agregar más.
+  Atributos de la sección:  data-bloque="N" (el viaje entre bloques es más largo) · data-pie="texto del pie"
+                            data-hora="0..1" (opcional; por defecto se reparte amanecer → atardecer) · data-calor="0..1"
+  Animación de un elemento: data-a="sube | palabras | letras | resorte | flecha | llena | orbita | aparece"  data-t="seg"
+  Animación de los hijos:   data-hijos="sube | abanico | resorte"  data-t="seg del primero"  data-paso="seg entre hijos"
+  Reposo en perspectiva:    data-ry / data-rx / data-rz (grados)  data-z (px)
+  Vidrio:                   class="vidrio" (el motor le pone cara, canto y sombra). Hijos con class="fuera" flotan sobre la cara.
+  Notas del orador:         <aside>…</aside> (tecla N)
+-->
+
+<section class="lamina portada" id="portada" data-bloque="1" data-pie="">
+  <h1 class="titulazo" data-a="letras" data-t="0.20" data-paso="0.042" data-ry="7" data-rx="3">Ecología<br>cultural</h1>
+  <p class="sub" data-a="palabras" data-t="1.00">Cultura, sociedad y medio ambiente</p>
+  <div class="vidrio cita" data-a="sube" data-t="1.25" data-ry="5" data-rx="2">
+    <p>“La manera en que una sociedad entiende y utiliza la naturaleza también forma parte de su cultura.”</p>
+  </div>
+  <div class="vidrio datos" data-a="sube" data-t="1.45" data-rx="5">
+    <p><span class="campo">Integrantes: <span class="editable" data-clave="integrantes" data-ph="[nombres]"></span></span><span class="pto">·</span><span class="campo">Grupo: <span class="editable" data-clave="grupo" data-ph="[__]"></span></span><span class="pto">·</span><span class="campo">Materia: <span class="editable" data-clave="materia" data-ph="[__]">Humanidades</span></span><span class="pto">·</span><span class="campo">Profesor(a): <span class="editable" data-clave="profesor" data-ph="[__]"></span></span><span class="pto">·</span><span class="campo">Fecha: <span class="editable" data-clave="fecha" data-ph="[__]"></span></span></p>
+  </div>
+  <aside>30 segundos. Preséntense: integrantes, grupo, materia, profesor(a) y fecha. Lean la frase de la portada y digan en una línea de qué va la exposición: cómo se relacionan la cultura, la sociedad y el medio ambiente.</aside>
+</section>
+
+<section class="lamina" id="que-es" data-bloque="1" data-pie="Ecología cultural">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 1 · Introducción</p>
+  <h2 data-a="palabras" data-t="0.06">¿Qué es la ecología cultural?</h2>
+  <div class="vidrio entrada" data-a="sube" data-t="0.30" data-rx="3">
+    <p>Estudia la relación entre las <b>sociedades humanas</b> y el <b>ambiente</b> en el que viven. Analiza cómo las personas:</p>
+  </div>
+  <div class="rejilla g3d" data-hijos="abanico" data-t="0.40" data-paso="0.07">
+    <div class="vidrio item" data-ry="8" data-rx="2"><span class="disco fuera"><i>🌾</i></span><p>Utilizan los recursos naturales</p></div>
+    <div class="vidrio item" data-rx="3" data-z="-22"><span class="disco fuera" style="--dc:#EE9A45;--dc2:#A8481F"><i>🏗️</i></span><p>Modifican su entorno</p></div>
+    <div class="vidrio item" data-ry="-8" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>⚙️</i></span><p>Desarrollan formas de producción</p></div>
+    <div class="vidrio item" data-ry="8" data-rx="2"><span class="disco fuera" style="--dc:#E2703A;--dc2:#8A3414"><i>🎭</i></span><p>Construyen costumbres y tradiciones</p></div>
+    <div class="vidrio item" data-rx="3" data-z="-22"><span class="disco fuera" style="--dc:#8FD0C8;--dc2:#2E7F86"><i>🌦️</i></span><p>Se adaptan a las condiciones ambientales</p></div>
+    <div class="vidrio item" data-ry="-8" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>🌍</i></span><p>Generan impactos sobre los ecosistemas</p></div>
+  </div>
+  <div class="vidrio idea" data-a="sube" data-t="0.98" data-rx="5" data-barrido="1.46">
+    <p class="etq">Idea principal</p>
+    <p>La cultura no existe separada de la naturaleza: las sociedades dependen del ambiente y, al mismo tiempo, lo transforman.</p>
+  </div>
+  <aside>1:30 min. La ecología cultural estudia la relación entre las sociedades humanas y el ambiente en el que viven. Analiza cómo las personas utilizan los recursos naturales, modifican su entorno, desarrollan formas de producción, construyen costumbres y tradiciones, se adaptan a las condiciones ambientales y generan impactos sobre los ecosistemas. Idea principal: la cultura no existe separada de la naturaleza; las sociedades dependen del ambiente y, al mismo tiempo, lo transforman.</aside>
+</section>
+
+<section class="lamina" id="importancia" data-bloque="1" data-pie="Ecología cultural">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 1 · Introducción</p>
+  <h2 data-a="palabras" data-t="0.06">¿Por qué es importante?</h2>
+  <div class="vidrio entrada" data-a="sube" data-t="0.28" data-rx="3"><p>Los problemas ambientales <b>no son únicamente problemas naturales</b>. También tienen dimensiones:</p></div>
+  <div class="pastillas g3d p6" style="--n:6" data-hijos="sube" data-t="0.44" data-paso="0.07" data-dur="0.52">
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🌿</i> Ecológicas</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">👥</i> Sociales</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">💰</i> Económicas</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🏛️</i> Políticas</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🎭</i> Culturales</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">⚖️</i> Éticas</p></div>
+  </div>
+  <div class="vidrio idea" data-a="sube" data-t="0.85" data-rx="4"><p class="etq">Ejemplo</p><p>Un río contaminado no solo afecta a los peces</p></div>
+  <div class="columnas g3d mini" style="--n:6" data-hijos="resorte" data-t="1.05" data-paso="0.06">
+    <div class="vidrio col" data-ry="8" data-rx="2"><span class="disco fuera"><i>🐟</i></span><p>Peces</p></div>
+    <div class="vidrio col" data-ry="5" data-rx="2"><span class="disco fuera" style="--dc:#EE9A45;--dc2:#A8481F"><i>🚰</i></span><p>Agua potable</p></div>
+    <div class="vidrio col" data-ry="2" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>🌽</i></span><p>Agricultura</p></div>
+    <div class="vidrio col" data-ry="-2" data-rx="2"><span class="disco fuera" style="--dc:#E2703A;--dc2:#8A3414"><i>🏪</i></span><p>Economía local</p></div>
+    <div class="vidrio col" data-ry="-5" data-rx="2"><span class="disco fuera" style="--dc:#8FD0C8;--dc2:#2E7F86"><i>🎉</i></span><p>Tradiciones</p></div>
+    <div class="vidrio col" data-ry="-8" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>🏥</i></span><p>Salud</p></div>
+  </div>
+  <aside>1:30 min. La ecología cultural permite comprender que los problemas ambientales no son únicamente problemas naturales. También tienen dimensiones ecológicas, sociales, económicas, políticas, culturales y éticas. Por ejemplo, la contaminación de un río no solamente afecta a los peces: también puede afectar el agua potable, la agricultura, la economía local, las tradiciones y la salud de una comunidad.</aside>
+</section>
+
+<section class="lamina" id="calentamiento" data-bloque="2" data-pie="Fuente: IPCC" data-calor="0.3">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 2 · Calentamiento global</p>
+  <h2 data-a="palabras" data-t="0.06">Calentamiento global</h2>
+  <div class="vidrio enunciado" data-a="sube" data-t="0.28" data-rx="3" data-ry="-3"><p>Aumento sostenido de la <span>temperatura promedio</span> del sistema climático de la Tierra.</p><p>Se debe principalmente al incremento de <b>gases de efecto invernadero</b> producido por actividades humanas.</p></div>
+  <div class="vidrio aviso" data-a="sube" data-t="0.6" data-rx="5" data-barrido="1.3"><p class="emo-g"><i class="emo">🌡️</i></p><p>Las actividades humanas han causado <b>inequívocamente</b> el calentamiento global.</p></div>
+  <p class="rotulo" data-a="sube" data-t="0.92" data-dur="0.6">Principales gases</p>
+  <div class="columnas g3d" style="--n:3" data-hijos="resorte" data-t="1.0" data-paso="0.1">
+    <div class="vidrio col sig" data-ry="7" data-rx="2"><h3>CO₂</h3><p>Dióxido de carbono</p></div>
+    <div class="vidrio col sig" data-ry="0" data-rx="2"><h3>CH₄</h3><p>Metano</p></div>
+    <div class="vidrio col sig" data-ry="-7" data-rx="2"><h3>N₂O</h3><p>Óxido nitroso</p></div>
+  </div>
+  <aside>1:30 min. El calentamiento global es el aumento sostenido de la temperatura promedio del sistema climático de la Tierra, principalmente como consecuencia del incremento de gases de efecto invernadero producido por actividades humanas. El IPCC señala que las actividades humanas, principalmente mediante emisiones de gases de efecto invernadero, han causado inequívocamente el calentamiento global. Principales gases: dióxido de carbono (CO2), metano (CH4) y óxido nitroso (N2O).</aside>
+</section>
+
+<section class="lamina" id="como-se-produce" data-bloque="2" data-pie="Fuente: IPCC" data-calor="0.55">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 2 · Calentamiento global</p>
+  <h2 data-a="palabras" data-t="0.06">¿Cómo se produce?</h2>
+  <div class="flujo g3d" data-ry="-5" data-rx="2">
+    <svg class="flechas" viewBox="0 0 1664 356" aria-hidden="true">
+      <defs>
+        <linearGradient id="calor-g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1664" y2="0">
+          <stop offset="0" stop-color="#7FB069"/><stop offset=".28" stop-color="#C9C25C"/><stop offset=".5" stop-color="#F4B851"/><stop offset=".74" stop-color="#E9853B"/><stop offset="1" stop-color="#D0521F"/>
+        </linearGradient>
+      </defs>
+      <g data-a="llena" data-t="0.24" data-dur="1.30"><path class="pista" d="M10,340 L1654,268"/><path class="relleno" d="M10,340 L1654,268"/><circle class="punta-calor" r="15"/></g>
+      <g data-a="flecha" data-t="0.44" style="--col:#B9C063"><path class="trazo" d="M284,188 C304,176 322,172 336,172"/><path class="punta" d="M-15,-11 L5,0 L-15,11 Z" transform="translate(338,172) rotate(-4)"/></g>
+      <g data-a="flecha" data-t="0.66" style="--col:#F4B851"><path class="trazo" d="M632,170 C652,158 670,154 684,154"/><path class="punta" d="M-15,-11 L5,0 L-15,11 Z" transform="translate(686,154) rotate(-4)"/></g>
+      <g data-a="flecha" data-t="0.88" style="--col:#EE9A45"><path class="trazo" d="M980,152 C1000,140 1018,136 1032,136"/><path class="punta" d="M-15,-11 L5,0 L-15,11 Z" transform="translate(1034,136) rotate(-4)"/></g>
+      <g data-a="flecha" data-t="1.10" style="--col:#E2703A"><path class="trazo" d="M1328,134 C1348,122 1366,118 1380,118"/><path class="punta" d="M-15,-11 L5,0 L-15,11 Z" transform="translate(1382,118) rotate(-4)"/></g>
+    </svg>
+    <div class="vidrio paso p1" data-a="resorte" data-t="0.24" style="--dc:#8FBF78;--dc2:#4E7F3F"><span class="disco fuera"><i>🏭</i></span><p>Actividades humanas</p></div>
+    <div class="vidrio paso p2" data-a="resorte" data-t="0.46" style="--dc:#C9C25C;--dc2:#8A8530"><span class="disco fuera"><i>💨</i></span><p>Gases de efecto invernadero</p></div>
+    <div class="vidrio paso p3" data-a="resorte" data-t="0.68" style="--dc:#F4B851;--dc2:#B8771F"><span class="disco fuera"><i>☀️</i></span><p>Mayor retención de calor</p></div>
+    <div class="vidrio paso p4" data-a="resorte" data-t="0.90" style="--dc:#EE9A45;--dc2:#B25A1C"><span class="disco fuera"><i>🌡️</i></span><p>Aumento de temperatura</p></div>
+    <div class="vidrio paso p5" data-a="resorte" data-t="1.12" style="--dc:#E2703A;--dc2:#A8481F"><span class="disco fuera"><i>🌪️</i></span><p>Alteraciones climáticas</p></div>
+  </div>
+  <p class="rotulo" data-a="sube" data-t="1.16" data-dur="0.6">Principales actividades</p>
+  <div class="pastillas g3d" data-hijos="sube" data-t="1.22" data-paso="0.05" data-dur="0.52">
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🏭</i> Industria</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🚗</i> Transporte</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">⚡</i> Producción de energía</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🪓</i> Deforestación</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🐄</i> Agricultura y ganadería</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🛒</i> Producción y consumo</p></div>
+  </div>
+  <aside>1:30 min. Expliquen el esquema paso a paso: las actividades humanas emiten gases de efecto invernadero; estos gases hacen que la atmósfera retenga más calor; eso aumenta la temperatura y provoca alteraciones climáticas. Principales actividades: industria, transporte, producción de energía, deforestación, agricultura y ganadería, y producción y consumo. El IPCC relaciona las emisiones con el uso de energía, el cambio de uso del suelo y los patrones de producción y consumo.</aside>
+</section>
+
+<section class="lamina" id="consecuencias" data-bloque="2" data-pie="Fuente: IPCC · Impactos en todas las regiones del planeta" data-calor="0.45">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 2 · Calentamiento global</p>
+  <h2 data-a="palabras" data-t="0.06">Consecuencias del calentamiento global</h2>
+  <div class="duo g3d">
+    <div class="vidrio panel" data-a="sube" data-t="0.3" data-ry="5" data-rx="2"><h3>Ambientales</h3><div class="rens" data-hijos="sube" data-t="0.5" data-paso="0.06" data-dur="0.5"><p class="ren"><i class=emo>🦋</i> Pérdida de biodiversidad</p><p class="ren"><i class=emo>🌳</i> Alteración de ecosistemas</p><p class="ren"><i class=emo>🏜️</i> Sequías</p><p class="ren"><i class=emo>🌊</i> Inundaciones</p><p class="ren"><i class=emo>📈</i> Aumento del nivel del mar</p><p class="ren"><i class=emo>🔄</i> Cambios en los ciclos naturales</p></div></div>
+    <div class="vidrio panel" data-a="sube" data-t="0.45" data-ry="-5" data-rx="2"><h3>Sociales</h3><div class="rens" data-hijos="sube" data-t="0.65" data-paso="0.06" data-dur="0.5"><p class="ren"><i class=emo>🏥</i> Problemas de salud</p><p class="ren"><i class=emo>🧳</i> Migración</p><p class="ren"><i class=emo>🍽️</i> Inseguridad alimentaria</p><p class="ren"><i class=emo>🚱</i> Escasez de agua</p><p class="ren"><i class=emo>🏚️</i> Pérdida de viviendas y medios de vida</p></div></div>
+  </div>
+  <aside>2 min. Consecuencias ambientales: pérdida de biodiversidad, alteración de ecosistemas, sequías, inundaciones, aumento del nivel del mar y cambios en los ciclos naturales. Consecuencias sociales: problemas de salud, migración, inseguridad alimentaria, escasez de agua y pérdida de viviendas y medios de vida. El IPCC documenta cambios generalizados en la atmósfera, los océanos, la criosfera y la biosfera, así como impactos climáticos en todas las regiones.</aside>
+</section>
+
+<section class="lamina" id="cambio-vs-calentamiento" data-bloque="2" data-pie="Ecología cultural" data-calor="0.3">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 2 · Calentamiento global</p>
+  <h2 data-a="palabras" data-t="0.06">Cambio climático ≠ calentamiento global</h2>
+  <div class="duo g3d con-vs">
+    <div class="vidrio panel" data-a="sube" data-t="0.3" data-ry="7" data-rx="2"><p class="gen"><i class="emo">🌡️</i></p><h3>Calentamiento global</h3><p class="txt">Aumento de la <b>temperatura promedio</b> del planeta.</p></div>
+    <div class="vidrio panel" data-a="sube" data-t="0.45" data-ry="-7" data-rx="2"><p class="gen"><i class="emo">🌎</i></p><h3>Cambio climático</h3><p class="txt">Conjunto <b>más amplio</b> de modificaciones del sistema climático: temperaturas, precipitaciones, sequías, fenómenos extremos y otros patrones.</p></div>
+    <p class="vs" data-a="resorte" data-t="0.75" data-z="70">≠</p>
+  </div>
+  <div class="vidrio aviso" data-a="sube" data-t="1.1" data-rx="5" data-barrido="1.4"><p class="emo-g"><i class="emo">👉</i></p><p>El calentamiento global es <b>uno de los componentes centrales</b> del cambio climático.</p></div>
+  <aside>1 min. Es importante diferenciarlos. Calentamiento global: aumento de la temperatura promedio del planeta. Cambio climático: conjunto más amplio de modificaciones del sistema climático, incluyendo cambios en temperaturas, precipitaciones, sequías, fenómenos extremos y otros patrones. El calentamiento global es uno de los componentes centrales del cambio climático.</aside>
+</section>
+
+<section class="lamina" id="sostenible" data-bloque="3" data-pie="Fuente: ONU">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 3 · Lo sostenible y lo sustentable</p>
+  <h2 data-a="palabras" data-t="0.06">¿Qué significa sostenible?</h2>
+  <div class="vidrio enunciado" data-a="sube" data-t="0.28" data-rx="3" data-ry="3"><p>Satisfacer las necesidades <span>actuales</span> sin comprometer la capacidad de las <span>futuras generaciones</span> para satisfacer las suyas.</p></div>
+  <div class="duo g3d d4">
+    <div class="vidrio panel" data-a="sube" data-t="0.7" data-ry="6" data-rx="2"><h3>No significa solo</h3><p class="ecu">“No contaminar”</p></div>
+    <div class="vidrio panel" data-a="sube" data-t="0.9" data-ry="-5" data-rx="2"><h3>Es buscar un equilibrio entre</h3><p class="cad">💰 Economía <b>+</b> 👥 Sociedad <b>+</b> 🌿 Ambiente</p></div>
+  </div>
+  <aside>1:30 min. El desarrollo sostenible busca satisfacer las necesidades actuales sin comprometer la capacidad de las futuras generaciones para satisfacer sus propias necesidades. No significa simplemente «no contaminar»: implica buscar un equilibrio entre economía, sociedad y ambiente. La ONU considera estos tres elementos fundamentales para el desarrollo sostenible.</aside>
+</section>
+
+<section class="lamina" id="sostenible-sustentable" data-bloque="3" data-pie="Ecología cultural">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 3 · Lo sostenible y lo sustentable</p>
+  <h2 data-a="palabras" data-t="0.06">¿Sostenible y sustentable son lo mismo?</h2>
+  <div class="duo g3d">
+    <div class="vidrio panel" data-a="sube" data-t="0.3" data-ry="-6" data-rx="2"><p class="ecu">Sostenible <b>=</b> Sustentable</p><p class="txt">En muchos contextos de habla hispana se usan como términos equivalentes.</p></div>
+    <div class="vidrio panel" data-a="sube" data-t="0.45" data-ry="6" data-rx="2"><p class="txt">Los dos hablan de <b>mantener una actividad a largo plazo</b> sin destruir las condiciones que permiten su existencia.</p></div>
+  </div>
+  <div class="pastillas g3d" style="--n:3" data-hijos="sube" data-t="0.8" data-paso="0.07" data-dur="0.52">
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🌾</i> Agricultura sostenible</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">💧</i> Uso sustentable del agua</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🏙️</i> Ciudades sostenibles</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">☀️</i> Energías renovables</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">♻️</i> Economía circular</p></div>
+  </div>
+  <div class="vidrio aviso" data-a="sube" data-t="1.15" data-rx="5" data-barrido="1.4"><p class="emo-g"><i class="emo">🔭</i></p><p>La clave es pensar a largo plazo.</p></div>
+  <aside>1 min. En muchos contextos de habla hispana, sostenible y sustentable se utilizan como términos equivalentes. Ambos se relacionan con la posibilidad de mantener una actividad a largo plazo sin destruir las condiciones que permiten su existencia. Ejemplos: agricultura sostenible, uso sustentable del agua, ciudades sostenibles, energías renovables y economía circular. La clave es pensar a largo plazo.</aside>
+</section>
+
+<section class="lamina" id="tres-pilares" data-bloque="3" data-pie="Fuente: ONU">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 3 · Lo sostenible y lo sustentable</p>
+  <h2 data-a="palabras" data-t="0.06">Los tres pilares</h2>
+  <div class="pilares g3d">
+    <svg class="orbita" viewBox="0 0 1060 266" data-a="orbita" data-t="0.45" data-dur="1.0" aria-hidden="true">
+      <defs><linearGradient id="orbita-g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7FB069"/><stop offset=".5" stop-color="#F4B851"/><stop offset="1" stop-color="#E2703A"/></linearGradient></defs>
+      <ellipse class="o-base" cx="530" cy="133" rx="524" ry="127"/>
+      <ellipse class="o-guion" cx="530" cy="133" rx="524" ry="127"/>
+      <circle class="o-cometa" r="10"/>
+    </svg>
+    <div class="moneda ma" data-a="resorte" data-t="0.26" data-z="118"><span class="m-cara"><i>🌿</i></span></div>
+    <div class="moneda mb" data-a="resorte" data-t="0.40" data-z="118"><span class="m-cara"><i>👥</i></span></div>
+    <div class="moneda mc" data-a="resorte" data-t="0.54" data-z="118"><span class="m-cara"><i>💰</i></span></div>
+    <div class="vidrio ficha fa" data-a="sube" data-t="0.52" data-ry="9" data-rx="2"><h3>Ambiental</h3><p>Conservar ecosistemas y recursos naturales.</p></div>
+    <div class="vidrio ficha fb" data-a="sube" data-t="0.66" data-rx="3"><h3>Social</h3><p>Garantizar derechos, salud, educación, igualdad y calidad de vida.</p></div>
+    <div class="vidrio ficha fc" data-a="sube" data-t="0.80" data-ry="-9" data-rx="2"><h3>Económico</h3><p>Generar empleo y bienestar sin destruir la base natural de la economía.</p></div>
+  </div>
+  <div class="vidrio aviso" data-a="sube" data-t="1.10" data-rx="5" data-barrido="1.42">
+    <p class="emo-g"><i class="emo">⚠️</i></p>
+    <p>Si uno falla, el desarrollo deja de ser <b>verdaderamente sostenible</b>.</p>
+  </div>
+  <aside>1:30 min. Ambiental: conservar ecosistemas y recursos naturales. Social: garantizar derechos, salud, educación, igualdad y calidad de vida. Económico: generar empleo y bienestar sin destruir la base natural de la economía. Si uno falla, el desarrollo deja de ser verdaderamente sostenible. La ONU plantea precisamente la necesidad de armonizar crecimiento económico, inclusión social y protección ambiental.</aside>
+</section>
+
+<section class="lamina" id="desigualdades" data-bloque="4" data-pie="Fuente: PNUMA">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 4 · Desigualdades económicas y sociales</p>
+  <h2 data-a="palabras" data-t="0.06">¿Qué tienen que ver las desigualdades con la ecología?</h2>
+  <div class="vidrio entrada" data-a="sube" data-t="0.4" data-rx="3"><p>Las consecuencias ambientales <b>no se distribuyen de manera uniforme</b>.</p></div>
+  <div class="duo g3d d3">
+    <div class="vidrio panel" data-a="sube" data-t="0.55" data-ry="5" data-rx="2"><h3>Una comunidad con más recursos</h3><div class="rens" data-hijos="sube" data-t="0.75" data-paso="0.06" data-dur="0.5"><p class="ren"><i class=emo>🏗️</i> Mejor infraestructura</p><p class="ren"><i class=emo>🚰</i> Agua potable</p><p class="ren"><i class=emo>🏠</i> Viviendas más resistentes</p><p class="ren"><i class=emo>🏥</i> Acceso a servicios médicos</p><p class="ren"><i class=emo>💪</i> Mayor capacidad para recuperarse de desastres</p></div></div>
+    <div class="vidrio panel" data-a="sube" data-t="0.75" data-ry="-6" data-rx="2"><h3>Una comunidad vulnerable</h3><p class="ecu">Enfrenta mayores riesgos.</p><p class="txt">La triple crisis planetaria afecta con mayor intensidad a personas en pobreza, mujeres y pueblos indígenas.</p></div>
+  </div>
+  <aside>1:30 min. Las consecuencias ambientales no se distribuyen de manera uniforme. Una comunidad con mayores recursos puede tener mejor infraestructura, agua potable, viviendas más resistentes, acceso a servicios médicos y mayor capacidad para recuperarse de desastres, mientras que las comunidades vulnerables pueden enfrentar mayores riesgos. El PNUMA señala que la triple crisis planetaria afecta con mayor intensidad a grupos vulnerables, incluyendo personas en pobreza, mujeres y pueblos indígenas.</aside>
+</section>
+
+<section class="lamina" id="desigualdad-ambiental" data-bloque="4" data-pie="Ecología cultural">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 4 · Desigualdades económicas y sociales</p>
+  <h2 data-a="palabras" data-t="0.06">Desigualdad ambiental</h2>
+  <div class="vidrio entrada ancha" data-a="sube" data-t="0.28" data-rx="3"><p>Ocurre cuando distintos grupos no tienen lo mismo ni enfrentan lo mismo.</p></div>
+  <div class="duo g3d">
+    <div class="vidrio panel" data-a="sube" data-t="0.5" data-ry="-5" data-rx="2"><h3>Acceso desigual a…</h3><div class="rens rens2" data-hijos="sube" data-t="0.7" data-paso="0.06" data-dur="0.5"><p class="ren"><i class=emo>💧</i> Agua limpia</p><p class="ren"><i class=emo>🌬️</i> Aire limpio</p><p class="ren"><i class=emo>🌳</i> Áreas verdes</p><p class="ren"><i class=emo>🍎</i> Alimentos</p><p class="ren"><i class=emo>⚡</i> Energía</p><p class="ren"><i class=emo>⛰️</i> Recursos naturales</p></div></div>
+    <div class="vidrio panel" data-a="sube" data-t="0.65" data-ry="5" data-rx="2"><h3>Exposición desigual a…</h3><div class="rens rens2" data-hijos="sube" data-t="0.85" data-paso="0.06" data-dur="0.5"><p class="ren"><i class=emo>🏭</i> Contaminación</p><p class="ren"><i class=emo>🏜️</i> Sequías</p><p class="ren"><i class=emo>🌊</i> Inundaciones</p><p class="ren"><i class=emo>🗑️</i> Residuos</p><p class="ren"><i class=emo>🥀</i> Degradación ambiental</p></div></div>
+  </div>
+  <aside>1:30 min. La desigualdad ambiental ocurre cuando diferentes grupos tienen un acceso desigual a agua limpia, aire limpio, áreas verdes, alimentos, energía y recursos naturales y, al mismo tiempo, enfrentan diferentes niveles de exposición a contaminación, sequías, inundaciones, residuos y degradación ambiental.</aside>
+</section>
+
+<section class="lamina" id="justicia-ambiental" data-bloque="4" data-pie="Fuente: IPCC">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 4 · Desigualdades económicas y sociales</p>
+  <h2 data-a="palabras" data-t="0.06">⚖️ Justicia ambiental</h2>
+  <div class="vidrio entrada ancha" data-a="sube" data-t="0.3" data-rx="3"><p>Busca que los beneficios y las cargas ambientales se distribuyan de manera justa, y que todas las personas puedan participar en las decisiones sobre su territorio.</p></div>
+  <div class="vidrio pregunta grande" data-a="sube" data-t="0.7" data-rx="4" data-ry="-3" data-barrido="1.3"><p class=etq>Pregunta para el grupo</p><p class="q">¿Es justo que quienes menos contaminan sean, a veces, quienes más sufren las consecuencias?</p></div>
+  <aside>2 min. La justicia ambiental busca que los beneficios y las cargas ambientales se distribuyan de manera justa y que todas las personas puedan participar en las decisiones relacionadas con su territorio. Lancen la pregunta al grupo y dejen que dos o tres compañeros respondan: ¿es justo que quienes menos contaminan sean algunas veces quienes más sufren las consecuencias? El IPCC señala que las comunidades históricamente menos responsables de las emisiones pueden resultar desproporcionadamente afectadas.</aside>
+</section>
+
+<section class="lamina" id="mexico-clima" data-bloque="5" data-pie="Fuente: información oficial de México">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 5 · México como ejemplo</p>
+  <h2 data-a="palabras" data-t="0.06">Cambio climático en México</h2>
+  <div class="vidrio entrada ancha" data-a="sube" data-t="0.3" data-rx="3"><p>México es <b>muy vulnerable</b> por sus características geográficas, climáticas y sociales.</p></div>
+  <div class="rejilla g3d" data-hijos="abanico" data-t="0.46" data-paso="0.07">
+    <div class="vidrio item" data-ry="8" data-rx="2"><span class="disco fuera"><i>🌡️</i></span><p>Aumento de temperaturas</p></div>
+    <div class="vidrio item" data-ry="0" data-rx="3" data-z="-22"><span class="disco fuera" style="--dc:#EE9A45;--dc2:#A8481F"><i>💧</i></span><p>Problemas de disponibilidad de agua</p></div>
+    <div class="vidrio item" data-ry="-8" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>🌊</i></span><p>Inundaciones</p></div>
+    <div class="vidrio item" data-ry="8" data-rx="2"><span class="disco fuera" style="--dc:#E2703A;--dc2:#8A3414"><i>🏜️</i></span><p>Sequías</p></div>
+    <div class="vidrio item" data-ry="0" data-rx="3" data-z="-22"><span class="disco fuera" style="--dc:#8FD0C8;--dc2:#2E7F86"><i>🌽</i></span><p>Afectaciones agrícolas</p></div>
+    <div class="vidrio item" data-ry="-8" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>🏥</i></span><p>Riesgos para la salud</p></div>
+  </div>
+  <div class="vidrio aviso" data-a="sube" data-t="1.05" data-rx="5" data-barrido="1.4"><p class="emo-g"><i class="emo">📌</i></p><p>Las condiciones socioeconómicas y la desigualdad pueden <b>aumentar la vulnerabilidad</b> frente al cambio climático.</p></div>
+  <aside>1:30 min. México presenta una vulnerabilidad importante debido a sus características geográficas, climáticas y sociales. Entre los impactos identificados se encuentran: aumento de temperaturas, problemas de disponibilidad de agua, inundaciones, sequías, afectaciones agrícolas y riesgos para la salud. La información oficial mexicana señala que las condiciones socioeconómicas y la desigualdad pueden aumentar la vulnerabilidad frente al cambio climático.</aside>
+</section>
+
+<section class="lamina" id="mexico-biodiversidad" data-bloque="5" data-pie="Fuente: CONABIO">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 5 · México como ejemplo</p>
+  <h2 data-a="palabras" data-t="0.06">México: cultura y biodiversidad</h2>
+  <div class="vidrio enunciado" data-a="sube" data-t="0.28" data-rx="3" data-ry="-3"><p><i class=emo>🇲🇽</i> Una enorme diversidad <span>biológica</span> y <span>cultural</span>.</p><p>Los pueblos de México tienen una relación histórica y cultural con la biodiversidad.</p></div>
+  <p class="rotulo" data-a="sube" data-t="0.62" data-dur="0.6">Muchas comunidades han desarrollado conocimientos sobre:</p>
+  <div class="columnas g3d mini" style="--n:6" data-hijos="resorte" data-t="0.72" data-paso="0.07">
+    <div class="vidrio col" data-ry="8" data-rx="2"><span class="disco fuera"><i>🌽</i></span><p>Agricultura</p></div>
+    <div class="vidrio col" data-ry="5" data-rx="2"><span class="disco fuera" style="--dc:#EE9A45;--dc2:#A8481F"><i>🌲</i></span><p>Manejo forestal</p></div>
+    <div class="vidrio col" data-ry="2" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>💧</i></span><p>Manejo del agua</p></div>
+    <div class="vidrio col" data-ry="-2" data-rx="2"><span class="disco fuera" style="--dc:#E2703A;--dc2:#8A3414"><i>🦎</i></span><p>Conocimiento de especies</p></div>
+    <div class="vidrio col" data-ry="-5" data-rx="2"><span class="disco fuera" style="--dc:#8FD0C8;--dc2:#2E7F86"><i>🌿</i></span><p>Plantas medicinales</p></div>
+    <div class="vidrio col" data-ry="-8" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>🫘</i></span><p>Semillas y variedades locales</p></div>
+  </div>
+  <aside>1:30 min. México posee una enorme diversidad biológica y cultural. Muchas comunidades han desarrollado conocimientos relacionados con agricultura, manejo forestal, manejo del agua, conocimiento de especies, plantas medicinales, y semillas y variedades locales. CONABIO reconoce la relación histórica y cultural de diversos pueblos de México con la biodiversidad.</aside>
+</section>
+
+<section class="lamina" id="conocimientos" data-bloque="6" data-pie="Fuente: UNESCO">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 6 · Cultura y conocimientos tradicionales</p>
+  <h2 data-a="palabras" data-t="0.06">Conocimientos indígenas y locales</h2>
+  <div class="duo g3d">
+    <div class="vidrio enunciado" data-a="sube" data-t="0.3" data-ry="6" data-rx="2"><p>Sistemas de conocimientos desarrollados y transmitidos <span>entre generaciones</span>.</p><p class="gen"><i class="emo">👵</i> <b>→</b> <i class="emo">👩</i> <b>→</b> <i class="emo">🧒</i></p><p>Surgen de la interacción histórica entre las comunidades y su entorno natural.</p></div>
+    <div class="vidrio panel" data-a="sube" data-t="0.45" data-ry="-6" data-rx="2"><h3>Pueden incluir</h3><div class="rens" data-hijos="sube" data-t="0.65" data-paso="0.06" data-dur="0.5"><p class="ren"><i class=emo>🌙</i> Observación de ciclos naturales</p><p class="ren"><i class=emo>🌽</i> Agricultura tradicional</p><p class="ren"><i class=emo>🫘</i> Manejo de semillas</p><p class="ren"><i class=emo>🌿</i> Conocimiento de plantas</p><p class="ren"><i class=emo>💧</i> Manejo del agua</p><p class="ren"><i class=emo>⛰️</i> Conservación de suelos</p><p class="ren"><i class=emo>🤝</i> Prácticas comunitarias</p></div></div>
+  </div>
+  <aside>1:30 min. Los conocimientos tradicionales son sistemas de conocimientos desarrollados y transmitidos entre generaciones. Pueden incluir: observación de ciclos naturales, agricultura tradicional, manejo de semillas, conocimiento de plantas, manejo del agua, conservación de suelos y prácticas comunitarias. UNESCO reconoce que los conocimientos y prácticas tradicionales surgen de la interacción histórica entre las comunidades y su entorno natural.</aside>
+</section>
+
+<section class="lamina" id="valores-biodiversidad" data-bloque="6" data-pie="Fuente: UNESCO">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 6 · Cultura y conocimientos tradicionales</p>
+  <h2 data-a="palabras" data-t="0.06">Cultura + biodiversidad</h2>
+  <div class="vidrio entrada ancha" data-a="sube" data-t="0.28" data-rx="3"><p>La biodiversidad <b>no solamente tiene un valor económico</b>. También puede tener:</p></div>
+  <div class="columnas g3d" style="--n:4" data-hijos="sube" data-t="0.45" data-paso="0.09">
+    <div class="vidrio col" data-ry="8" data-rx="2"><span class="disco fuera"><i>🌱</i></span><h3>Valor ecológico</h3><p>Mantiene procesos de los ecosistemas.</p></div>
+    <div class="vidrio col" data-ry="3" data-rx="2"><span class="disco fuera" style="--dc:#EE9A45;--dc2:#A8481F"><i>💰</i></span><h3>Valor económico</h3><p>Proporciona alimentos, materias primas y otros recursos.</p></div>
+    <div class="vidrio col" data-ry="-3" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>🎭</i></span><h3>Valor cultural</h3><p>Forma parte de tradiciones e identidades.</p></div>
+    <div class="vidrio col" data-ry="-8" data-rx="2"><span class="disco fuera" style="--dc:#E2703A;--dc2:#8A3414"><i>✨</i></span><h3>Valor espiritual</h3><p>Puede tener significado dentro de las cosmovisiones.</p></div>
+  </div>
+  <div class="vidrio aviso" data-a="sube" data-t="1.1" data-rx="5" data-barrido="1.4"><p>Cada cultura puede valorar la biodiversidad de distinta manera, y esas perspectivas deben considerarse en la conservación.</p></div>
+  <aside>1:30 min. La biodiversidad no solamente tiene un valor económico. También puede tener valor ecológico (mantiene procesos de los ecosistemas), valor económico (proporciona alimentos, materias primas y otros recursos), valor cultural (forma parte de tradiciones e identidades) y valor espiritual (puede tener significado dentro de las cosmovisiones). UNESCO destaca que las diferentes culturas pueden valorar la biodiversidad de distintas maneras y que estas perspectivas deben considerarse en la conservación.</aside>
+</section>
+
+<section class="lamina" id="consumo" data-bloque="7" data-pie="Ecología cultural">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 7 · Producción y consumo</p>
+  <h2 data-a="palabras" data-t="0.06">Cultura del consumo</h2>
+  <div class="vidrio entrada ancha" data-a="sube" data-t="0.28" data-rx="3"><p>La sociedad contemporánea está marcada por <b>elevados niveles de producción y consumo</b>.</p></div>
+  <div class="vidrio idea cadena" data-a="sube" data-t="0.45" data-rx="4"><p class="etq">El problema</p><p data-a="palabras" data-t="0.62" data-paso="0.05" data-dur="0.5">⛏️ Extraer <b>→</b> 🏭 Producir <b>→</b> 🛍️ Consumir <b>→</b> 🗑️ Desechar</p></div>
+  <p class="rotulo" data-a="sube" data-t="0.92" data-dur="0.6">Este modelo puede generar</p>
+  <div class="pastillas g3d" style="--n:3" data-hijos="sube" data-t="1.0" data-paso="0.07" data-dur="0.52">
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">⛏️</i> Sobreexplotación de recursos</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">☁️</i> Contaminación</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🗑️</i> Residuos</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">💨</i> Emisiones</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🦋</i> Pérdida de biodiversidad</p></div>
+  </div>
+  <div class="vidrio aviso" data-a="sube" data-t="1.15" data-rx="5" data-barrido="1.4"><p class="emo-g"><i class="emo">🔁</i></p><p>Por eso se plantea la transición hacia modelos de <b>producción y consumo responsables</b>.</p></div>
+  <aside>1:30 min. La sociedad contemporánea está marcada por elevados niveles de producción y consumo. El problema es el modelo lineal: extraer, producir, consumir y desechar. Este modelo puede generar sobreexplotación de recursos, contaminación, residuos, emisiones y pérdida de biodiversidad. Por eso se plantea la transición hacia modelos de producción y consumo responsables.</aside>
+</section>
+
+<section class="lamina" id="economia-circular" data-bloque="7" data-pie="Ecología cultural">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 7 · Producción y consumo</p>
+  <h2 data-a="palabras" data-t="0.06">Economía circular</h2>
+  <div class="vidrio idea cadena tenue" data-a="sube" data-t="0.28" data-rx="4"><p class="etq">En lugar de</p><p data-a="palabras" data-t="0.42" data-paso="0.05" data-dur="0.5">Extraer <b>→</b> Fabricar <b>→</b> Usar <b>→</b> Tirar</p></div>
+  <div class="vidrio idea cadena larga" data-a="sube" data-t="0.55" data-rx="4"><p class="etq">La economía circular busca</p><p data-a="palabras" data-t="0.75" data-paso="0.05" data-dur="0.5">Diseñar <b>→</b> Producir <b>→</b> Usar <b>→</b> Reparar <b>→</b> Reutilizar <b>→</b> Recuperar <b>→</b> ♻️ Reciclar</p></div>
+  <div class="vidrio entrada ancha" data-a="sube" data-t="1.0" data-rx="3"><p>Objetivo: <b>reducir el desperdicio</b> y mantener los materiales en uso el mayor tiempo posible.</p></div>
+  <div class="vidrio aviso" data-a="sube" data-t="1.15" data-rx="5" data-barrido="1.4"><p class="emo-g"><i class="emo">🍾</i></p><p><b>Ejemplo:</b> una botella puede ser reutilizada o transformada en otro producto, en lugar de convertirse inmediatamente en residuo.</p></div>
+  <aside>1:30 min. En lugar del modelo lineal (extraer, fabricar, usar y tirar), la economía circular busca diseñar, producir, usar, reparar, reutilizar, recuperar y reciclar. Su objetivo es reducir el desperdicio y mantener los materiales en uso durante el mayor tiempo posible. Ejemplo: una botella puede ser reutilizada o transformada en otro producto en lugar de convertirse inmediatamente en residuo.</aside>
+</section>
+
+<section class="lamina" id="biodiversidad" data-bloque="8" data-pie="Ecología cultural">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 8 · Biodiversidad</p>
+  <h2 data-a="palabras" data-t="0.06">¿Qué es la biodiversidad?</h2>
+  <div class="vidrio entrada corta" data-a="sube" data-t="0.28" data-rx="3"><p>Es la <b>variedad</b> de:</p></div>
+  <div class="columnas g3d" style="--n:3" data-hijos="resorte" data-t="0.42" data-paso="0.12">
+    <div class="vidrio col gde" data-ry="7" data-rx="2"><span class="disco fuera"><i>🧬</i></span><h3>Genes</h3></div>
+    <div class="vidrio col gde" data-ry="0" data-rx="2"><span class="disco fuera" style="--dc:#EE9A45;--dc2:#A8481F"><i>🦜</i></span><h3>Especies</h3></div>
+    <div class="vidrio col gde" data-ry="-7" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>🏞️</i></span><h3>Ecosistemas</h3></div>
+  </div>
+  <div class="duo g3d">
+    <div class="vidrio panel" data-a="sube" data-t="0.95" data-ry="5" data-rx="2"><p class="ren"><i class="emo">🚫</i> <span>No se trata solamente de <b>“tener muchos animales”</b>.</span></p></div>
+    <div class="vidrio panel" data-a="sube" data-t="1.1" data-ry="-5" data-rx="2"><p class="ren"><i class="emo">✅</i> <span>Permite que los ecosistemas mantengan <b>funciones fundamentales</b> para las sociedades.</span></p></div>
+  </div>
+  <aside>1 min. La biodiversidad comprende la variedad de genes, especies y ecosistemas. No se trata solamente de «tener muchos animales». La biodiversidad permite que los ecosistemas mantengan funciones fundamentales para las sociedades.</aside>
+</section>
+
+<section class="lamina" id="perdida-biodiversidad" data-bloque="8" data-pie="Fuente: INECC">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 8 · Biodiversidad</p>
+  <h2 data-a="palabras" data-t="0.06">Pérdida de biodiversidad</h2>
+  <p class="rotulo" data-a="sube" data-t="0.3" data-dur="0.6">Principales factores</p>
+  <div class="duo g3d">
+    <div class="vidrio panel alto" data-a="sube" data-t="0.38" data-ry="-6" data-rx="2"><div class="rens" data-hijos="sube" data-t="0.55" data-paso="0.06" data-dur="0.5"><p class="ren"><i class=emo>🪓</i> Destrucción y fragmentación del hábitat</p><p class="ren"><i class=emo>🌡️</i> Cambio climático</p><p class="ren"><i class=emo>☁️</i> Contaminación</p></div></div>
+    <div class="vidrio panel alto" data-a="sube" data-t="0.52" data-ry="6" data-rx="2"><div class="rens" data-hijos="sube" data-t="0.7" data-paso="0.06" data-dur="0.5"><p class="ren"><i class=emo>🎣</i> Sobreexplotación</p><p class="ren"><i class=emo>🐍</i> Especies invasoras</p><p class="ren"><i class=emo>🚜</i> Cambio de uso del suelo</p></div></div>
+  </div>
+  <div class="vidrio aviso" data-a="sube" data-t="1.1" data-rx="5" data-barrido="1.4"><p class="emo-g"><i class="emo">🇲🇽</i></p><p>En México, el cambio climático <b>se combina</b> con estos factores y con la urbanización para afectar la diversidad biológica.</p></div>
+  <aside>1:30 min. Principales factores de la pérdida de biodiversidad: destrucción y fragmentación del hábitat, cambio climático, contaminación, sobreexplotación, especies invasoras y cambio de uso del suelo. En México, el INECC señala que el cambio climático se combina con factores como destrucción del hábitat, contaminación, sobreexplotación, urbanización y especies invasoras para afectar la diversidad biológica.</aside>
+</section>
+
+<section class="lamina" id="ciudades" data-bloque="9" data-pie="Fuente: PNUMA">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 9 · Otros temas importantes</p>
+  <h2 data-a="palabras" data-t="0.06">Ciudades y ecología cultural</h2>
+  <div class="vidrio entrada ancha" data-a="sube" data-t="0.28" data-rx="3"><p>Las ciudades son espacios donde la cultura <b>transforma intensamente</b> el ambiente.</p></div>
+  <div class="columnas g3d mini" style="--n:6" data-hijos="sube" data-t="0.48" data-paso="0.07">
+    <div class="vidrio col" data-ry="8" data-rx="2"><span class="disco fuera"><i>🏗️</i></span><p>Urbanización desordenada</p></div>
+    <div class="vidrio col" data-ry="5" data-rx="2"><span class="disco fuera" style="--dc:#EE9A45;--dc2:#A8481F"><i>🚗</i></span><p>Tráfico</p></div>
+    <div class="vidrio col" data-ry="2" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>🌫️</i></span><p>Contaminación atmosférica</p></div>
+    <div class="vidrio col" data-ry="-2" data-rx="2"><span class="disco fuera" style="--dc:#E2703A;--dc2:#8A3414"><i>🗑️</i></span><p>Residuos</p></div>
+    <div class="vidrio col" data-ry="-5" data-rx="2"><span class="disco fuera" style="--dc:#8FD0C8;--dc2:#2E7F86"><i>🚿</i></span><p>Consumo de agua</p></div>
+    <div class="vidrio col" data-ry="-8" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>🔥</i></span><p>Islas de calor</p></div>
+  </div>
+  <div class="vidrio aviso" data-a="sube" data-t="1.1" data-rx="5" data-barrido="1.4"><p class="emo-g"><i class="emo">🏙️</i></p><p>La urbanización es uno de los <b>principales impulsores</b> del cambio ambiental: clima, biodiversidad y contaminación.</p></div>
+  <aside>1:30 min. Las ciudades son espacios donde la cultura transforma intensamente el ambiente. Problemas: urbanización desordenada, tráfico, contaminación atmosférica, residuos, consumo de agua e islas de calor. El PNUMA señala que la urbanización es uno de los principales impulsores del cambio ambiental y que las ciudades están fuertemente relacionadas con la crisis climática, la pérdida de biodiversidad y la contaminación.</aside>
+</section>
+
+<section class="lamina" id="agua" data-bloque="9" data-pie="Ecología cultural">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 9 · Otros temas importantes</p>
+  <h2 data-a="palabras" data-t="0.06">Agua y cultura</h2>
+  <div class="vidrio entrada ancha" data-a="sube" data-t="0.28" data-rx="3"><p>El agua <b>no es únicamente un recurso económico</b>. También tiene dimensiones:</p></div>
+  <div class="pastillas g3d p6" style="--n:5" data-hijos="sube" data-t="0.4" data-paso="0.07" data-dur="0.52">
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">👥</i> Sociales</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🎭</i> Culturales</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">📜</i> Históricas</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🏛️</i> Políticas</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🌿</i> Ecológicas</p></div>
+  </div>
+  <p class="rotulo" data-a="sube" data-t="0.72" data-dur="0.6">La disponibilidad de agua puede determinar…</p>
+  <div class="rejilla g3d" data-hijos="abanico" data-t="0.82" data-paso="0.07">
+    <div class="vidrio item" data-ry="-7" data-rx="2"><span class="disco fuera"><i>📍</i></span><p>Dónde se establecen las comunidades</p></div>
+    <div class="vidrio item" data-ry="0" data-rx="3" data-z="-22"><span class="disco fuera" style="--dc:#EE9A45;--dc2:#A8481F"><i>💼</i></span><p>Qué actividades económicas desarrollan</p></div>
+    <div class="vidrio item" data-ry="7" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>🎉</i></span><p>Qué prácticas culturales mantienen</p></div>
+  </div>
+  <div class="vidrio pregunta" data-a="sube" data-t="1.15" data-rx="4" data-ry="-3" data-barrido="1.4"><p class=etq>Pregunta</p><p class="q"><i class=emo>💧</i> ¿Qué ocurriría con una comunidad si desapareciera su principal fuente de agua?</p></div>
+  <aside>1 min. El agua no es únicamente un recurso económico. También tiene dimensiones sociales, culturales, históricas, políticas y ecológicas. La disponibilidad del agua puede determinar dónde se establecen comunidades, qué actividades económicas desarrollan y qué prácticas culturales mantienen. Pregunta para el grupo: ¿qué ocurriría con una comunidad si desapareciera su principal fuente de agua?</aside>
+</section>
+
+<section class="lamina" id="agroecologia" data-bloque="9" data-pie="Fuente: FAO">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 9 · Otros temas importantes</p>
+  <h2 data-a="palabras" data-t="0.06">Agroecología</h2>
+  <div class="vidrio entrada ancha" data-a="sube" data-t="0.28" data-rx="3"><p>Aplica <b>principios ecológicos</b> a los sistemas agrícolas y considera también las <b>dimensiones sociales</b>.</p></div>
+  <p class="rotulo" data-a="sube" data-t="0.48" data-dur="0.6">Puede favorecer</p>
+  <div class="rejilla g3d" data-hijos="abanico" data-t="0.55" data-paso="0.07">
+    <div class="vidrio item" data-ry="-7" data-rx="2"><span class="disco fuera"><i>🌽</i></span><p>Diversidad de cultivos</p></div>
+    <div class="vidrio item" data-ry="0" data-rx="3" data-z="-22"><span class="disco fuera" style="--dc:#EE9A45;--dc2:#A8481F"><i>🪱</i></span><p>Salud del suelo</p></div>
+    <div class="vidrio item" data-ry="7" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>🐝</i></span><p>Biodiversidad</p></div>
+    <div class="vidrio item" data-ry="-7" data-rx="2"><span class="disco fuera" style="--dc:#E2703A;--dc2:#8A3414"><i>💧</i></span><p>Uso eficiente de recursos</p></div>
+    <div class="vidrio item" data-ry="0" data-rx="3" data-z="-22"><span class="disco fuera" style="--dc:#8FD0C8;--dc2:#2E7F86"><i>👩‍🌾</i></span><p>Conocimiento local</p></div>
+    <div class="vidrio item" data-ry="7" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>🌦️</i></span><p>Adaptación al cambio climático</p></div>
+  </div>
+  <div class="vidrio aviso" data-a="sube" data-t="1.1" data-rx="5" data-barrido="1.4"><p class="emo-g"><i class="emo">🌾</i></p><p>Puede contribuir a la <b>seguridad alimentaria</b>, la biodiversidad, la restauración de servicios ecosistémicos y la adaptación climática.</p></div>
+  <aside>1:30 min. La agroecología aplica principios ecológicos a los sistemas agrícolas y considera también las dimensiones sociales. Puede favorecer la diversidad de cultivos, la salud del suelo, la biodiversidad, el uso eficiente de recursos, el conocimiento local y la adaptación al cambio climático. La FAO considera que la agroecología puede contribuir a la seguridad alimentaria, la biodiversidad, la restauración de servicios ecosistémicos y la adaptación climática.</aside>
+</section>
+
+<section class="lamina" id="triple-crisis" data-bloque="10" data-pie="Fuente: PNUMA">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 10 · La triple crisis planetaria</p>
+  <h2 data-a="palabras" data-t="0.06">Una crisis, tres dimensiones</h2>
+  <div class="columnas g3d ancho" style="--n:3" data-hijos="resorte" data-t="0.3" data-paso="0.16">
+    <div class="vidrio col gde" data-ry="7" data-rx="2"><span class="disco fuera"><i>🌡️</i></span><h3>Cambio climático</h3><p>Alteración del sistema climático.</p></div>
+    <div class="vidrio col gde enlace" data-ry="0" data-rx="2"><span class="disco fuera" style="--dc:#EE9A45;--dc2:#A8481F"><i>🦋</i></span><h3>Pérdida de biodiversidad</h3><p>Disminución y transformación de especies y ecosistemas.</p></div>
+    <div class="vidrio col gde enlace" data-ry="-7" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>🏭</i></span><h3>Contaminación y residuos</h3><p>Degradación del aire, agua y suelo.</p></div>
+  </div>
+  <div class="vidrio aviso grande" data-a="sube" data-t="1.05" data-rx="5" data-barrido="1.4"><p>No son problemas aislados. <span>Se relacionan entre sí.</span></p></div>
+  <aside>2 min. Cambio climático: alteración del sistema climático. Pérdida de biodiversidad: disminución y transformación de especies y ecosistemas. Contaminación y residuos: degradación del aire, agua y suelo. El PNUMA denomina a estas tres problemáticas la triple crisis planetaria. Y lo importante: no son problemas aislados; se relacionan entre sí. Pueden dar un ejemplo de cómo una alimenta a la otra.</aside>
+</section>
+
+<section class="lamina" id="que-hacer" data-bloque="11" data-pie="Ecología cultural">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 11 · Soluciones</p>
+  <h2 data-a="palabras" data-t="0.06">¿Qué podemos hacer?</h2>
+  <div class="vidrio entrada corta" data-a="sube" data-t="0.28" data-rx="3"><p>Las soluciones requieren <b>diferentes niveles</b>.</p></div>
+  <div class="columnas g3d" style="--n:4" data-hijos="sube" data-t="0.44" data-paso="0.09">
+    <div class="vidrio col" data-ry="8" data-rx="2"><span class="disco fuera"><i>🙋</i></span><h3>Individual</h3><ul><li>Reducir desperdicios</li><li>Consumir responsablemente</li><li>Ahorrar agua y energía</li><li>Evitar productos innecesarios</li></ul></div>
+    <div class="vidrio col" data-ry="3" data-rx="2"><span class="disco fuera" style="--dc:#EE9A45;--dc2:#A8481F"><i>🏫</i></span><h3>Escolar</h3><ul><li>Separación de residuos</li><li>Huertos escolares</li><li>Educación ambiental</li><li>Campañas de concientización</li></ul></div>
+    <div class="vidrio col" data-ry="-3" data-rx="2"><span class="disco fuera" style="--dc:#9CCB85;--dc2:#3F7F4C"><i>🏘️</i></span><h3>Comunitario</h3><ul><li>Protección de ecosistemas</li><li>Manejo responsable del agua</li><li>Restauración ambiental</li><li>Participación ciudadana</li></ul></div>
+    <div class="vidrio col" data-ry="-8" data-rx="2"><span class="disco fuera" style="--dc:#E2703A;--dc2:#8A3414"><i>🏛️</i></span><h3>Gobierno y empresas</h3><ul><li>Políticas ambientales</li><li>Energías limpias</li><li>Transporte sostenible</li><li>Regulación de contaminantes</li><li>Protección de biodiversidad</li></ul></div>
+  </div>
+  <aside>2 min. Las soluciones requieren diferentes niveles. Individual: reducir desperdicios, consumir responsablemente, ahorrar agua y energía, evitar productos innecesarios. Escolar: separación de residuos, huertos escolares, educación ambiental, campañas de concientización. Comunitario: protección de ecosistemas, manejo responsable del agua, restauración ambiental, participación ciudadana. Gobierno y empresas: políticas ambientales, energías limpias, transporte sostenible, regulación de contaminantes, protección de biodiversidad.</aside>
+</section>
+
+<section class="lamina" id="adaptacion-mitigacion" data-bloque="11" data-pie="Fuente: IPCC">
+  <p class="kicker" data-a="sube" data-t="0">Bloque 11 · Soluciones</p>
+  <h2 data-a="palabras" data-t="0.06">Adaptación y mitigación</h2>
+  <div class="duo g3d">
+    <div class="vidrio panel" data-a="sube" data-t="0.3" data-ry="-5" data-rx="2"><h3><i class="emo">🌱</i> Mitigación</h3><p class="txt">Busca reducir las <b>causas</b> del cambio climático.</p><div class="rens" data-hijos="sube" data-t="0.55" data-paso="0.06" data-dur="0.5"><p class="ren"><i class=emo>💨</i> Reducir emisiones</p><p class="ren"><i class=emo>☀️</i> Energías renovables</p><p class="ren"><i class=emo>💡</i> Eficiencia energética</p><p class="ren"><i class=emo>🌳</i> Protección de bosques</p></div></div>
+    <div class="vidrio panel" data-a="sube" data-t="0.45" data-ry="5" data-rx="2"><h3><i class="emo">🛡️</i> Adaptación</h3><p class="txt">Busca reducir los <b>daños</b> y prepararnos para los impactos.</p><div class="rens" data-hijos="sube" data-t="0.7" data-paso="0.06" data-dur="0.5"><p class="ren"><i class=emo>🚨</i> Sistemas de alerta</p><p class="ren"><i class=emo>🏗️</i> Infraestructura resistente</p><p class="ren"><i class=emo>💧</i> Manejo del agua</p><p class="ren"><i class=emo>🌾</i> Restauración de ecosistemas</p></div></div>
+  </div>
+  <div class="vidrio aviso" data-a="sube" data-t="1.1" data-rx="5" data-barrido="1.4"><p class="emo-g"><i class="emo">🤝</i></p><p>La acción climática requiere <b>integrar las dos</b> dentro del desarrollo sostenible.</p></div>
+  <aside>2 min. Mitigación: busca reducir las causas del cambio climático. Ejemplos: reducir emisiones, energías renovables, eficiencia energética y protección de bosques. Adaptación: busca reducir los daños y prepararnos para los impactos. Ejemplos: sistemas de alerta, infraestructura resistente, manejo del agua y restauración de ecosistemas. El IPCC considera que la acción climática requiere integrar adaptación y mitigación dentro del desarrollo sostenible.</aside>
+</section>
+
+<section class="lamina" id="actividad" data-bloque="12" data-pie="Ecología cultural">
+  <p class="kicker" data-a="sube" data-t="0">Bloque final · Actividad para el grupo</p>
+  <h2 data-a="palabras" data-t="0.06">Elige una problemática</h2>
+  <div class="vidrio entrada ancha" data-a="sube" data-t="0.28" data-rx="3"><p>Dividan al salón en equipos. <b>Cada equipo recibe un problema:</b></p></div>
+  <div class="duo g3d d4">
+    <div class="vidrio panel" data-a="sube" data-t="0.45" data-ry="6" data-rx="2"><div class="rens" data-hijos="sube" data-t="0.62" data-paso="0.06" data-dur="0.5"><p class="ren"><i class=emo>🪓</i> Deforestación</p><p class="ren"><i class=emo>🚱</i> Escasez de agua</p><p class="ren"><i class=emo>🏭</i> Contaminación</p><p class="ren"><i class=emo>🌡️</i> Calentamiento global</p><p class="ren"><i class=emo>🦋</i> Pérdida de biodiversidad</p></div><p class="tiempo"><i class="emo">⏱️</i> 4–5 minutos</p></div>
+    <div class="vidrio panel" data-a="sube" data-t="0.6" data-ry="-5" data-rx="2"><h3>Deben responder</h3><div class="rens" data-hijos="sube" data-t="0.78" data-paso="0.06" data-dur="0.5"><p class="ren"><b class=num>1</b> ¿Cuál es el problema?</p><p class="ren"><b class=num>2</b> ¿Qué actividad humana lo provoca o intensifica?</p><p class="ren"><b class=num>3</b> ¿A quién afecta?</p><p class="ren"><b class=num>4</b> ¿Qué relación tiene con la cultura?</p><p class="ren"><b class=num>5</b> ¿Qué solución sostenible proponen?</p></div></div>
+  </div>
+  <aside>4 a 5 minutos. Dividan al salón en equipos. Cada equipo recibe un problema: deforestación, escasez de agua, contaminación, calentamiento global o pérdida de biodiversidad. Deben responder: 1) ¿Cuál es el problema? 2) ¿Qué actividad humana lo provoca o intensifica? 3) ¿A quién afecta? 4) ¿Qué relación tiene con la cultura? 5) ¿Qué solución sostenible proponen? Pidan a uno o dos equipos que compartan su respuesta. Si van cortos de tiempo, reduzcan esta actividad a 3 minutos.</aside>
+</section>
+
+<section class="lamina" id="conclusion" data-bloque="12" data-pie="Fuente: UNESCO">
+  <p class="kicker" data-a="sube" data-t="0">Bloque final · Conclusión</p>
+  <h2 data-a="palabras" data-t="0.06">“Cuidar el ambiente también es cuidar <span class="res">nuestra cultura</span> y <span class="res">nuestro futuro</span>.”</h2>
+  <div class="vidrio entrada ancha" data-a="sube" data-t="0.6" data-rx="3"><p>La relación entre sociedad y naturaleza es dinámica: nuestras formas de producir, consumir, organizarnos y transmitir conocimientos transforman el ambiente.</p></div>
+  <p class="rotulo" data-a="sube" data-t="0.9" data-dur="0.6">Un futuro sostenible combina:</p>
+  <div class="pastillas g3d" style="--n:2" data-hijos="sube" data-t="1.0" data-paso="0.07" data-dur="0.52">
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🔬</i> Conocimiento científico</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🙌</i> Participación social</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">⚖️</i> Justicia ambiental</p></div>
+    <div class="vidrio pastilla" data-rx="4"><p><i class="emo">🌽</i> Conocimientos culturales y locales</p></div>
+  </div>
+  <aside>1:30 min. «Cuidar el ambiente también es cuidar nuestra cultura y nuestro futuro.» La ecología cultural nos permite comprender que la relación entre sociedad y naturaleza es dinámica. Nuestras formas de producir, consumir, organizarnos y transmitir conocimientos transforman el ambiente. Por ello, construir un futuro sostenible requiere combinar conocimiento científico, participación social, justicia ambiental y conocimientos culturales y locales. UNESCO también destaca la importancia de integrar diferentes sistemas de conocimiento y perspectivas culturales para responder a los desafíos ambientales.</aside>
+</section>
+
+<section class="lamina sombra" id="pregunta-final" data-bloque="12" data-pie="Ecología cultural">
+  <p class="kicker" data-a="sube" data-t="0">Pregunta final</p>
+  <h1 class="titulazo t2" data-a="letras" data-t="0.06" data-paso="0.026" data-dur="0.8" data-ry="6" data-rx="3">¿Qué tipo de relación<br>queremos con la naturaleza?</h1>
+  <div class="vidrio pregunta cita2" data-a="sube" data-t="1.0" data-rx="4" data-ry="-3" data-barrido="1.4"><p class="q">“La pregunta no es solamente qué planeta vamos a dejarles a las futuras generaciones, sino qué decisiones estamos tomando hoy para construirlo.”</p></div>
+  <aside>1 min. Cierren con la pregunta: ¿qué tipo de relación queremos con la naturaleza? Lean la frase: «La pregunta no es solamente qué planeta vamos a dejarles a las futuras generaciones, sino qué decisiones estamos tomando hoy para construirlo.» Dejen unos segundos de silencio, agradezcan y abran espacio para preguntas.</aside>
+</section>
+
+<section class="lamina" id="fuentes" data-bloque="12" data-pie="Ecología cultural">
+  <p class="kicker" data-a="sube" data-t="0">Referencias</p>
+  <h2 data-a="palabras" data-t="0.06">Fuentes</h2>
+  <div class="columnas g3d" style="--n:4" data-hijos="sube" data-t="0.3" data-paso="0.07">
+    <div class="vidrio col sig" data-ry="8" data-rx="2"><h3>IPCC</h3><p>Panel Intergubernamental sobre Cambio Climático</p></div>
+    <div class="vidrio col sig" data-ry="3" data-rx="2"><h3>ONU</h3><p>Objetivos de Desarrollo Sostenible</p></div>
+    <div class="vidrio col sig" data-ry="-3" data-rx="2"><h3>PNUMA</h3><p>Programa de las Naciones Unidas para el Medio Ambiente</p></div>
+    <div class="vidrio col sig" data-ry="-8" data-rx="2"><h3>UNESCO</h3><p>Cultura, biodiversidad y desarrollo sostenible</p></div>
+    <div class="vidrio col sig" data-ry="8" data-rx="2"><h3>FAO</h3><p>Agroecología</p></div>
+    <div class="vidrio col sig" data-ry="3" data-rx="2"><h3>INECC</h3><p>Instituto Nacional de Ecología y Cambio Climático</p></div>
+    <div class="vidrio col sig" data-ry="-3" data-rx="2"><h3>CONABIO</h3><p>Comisión Nacional para el Conocimiento y Uso de la Biodiversidad</p></div>
+  </div>
+  <aside>Dejen esta lámina al final, mientras responden preguntas. Las fuentes: IPCC (Panel Intergubernamental sobre Cambio Climático), ONU (Objetivos de Desarrollo Sostenible), PNUMA (Programa de las Naciones Unidas para el Medio Ambiente), UNESCO (cultura, biodiversidad y desarrollo sostenible), FAO (agroecología), INECC (Instituto Nacional de Ecología y Cambio Climático) y CONABIO (Comisión Nacional para el Conocimiento y Uso de la Biodiversidad).</aside>
+</section>
+  </div>
+  <div id="frente"><div id="frente-g"></div></div>
+  <div id="grano"></div>
+  <div id="hud">
+    <p id="pie"></p>
+    <p id="ayuda"><b>→</b> · <b>espacio</b> · <b>clic</b> avanzar &nbsp;|&nbsp; <b>←</b> regresar &nbsp;|&nbsp; <b>F</b> pantalla completa &nbsp;|&nbsp; <b>N</b> notas</p>
+    <p id="cuenta"></p>
+    <div id="avance"><i></i></div>
+  </div>
+  <div id="notas" hidden><p class="etq">Notas del orador</p><p id="notas-txt"></p></div>
+</div>
+</div>
+<noscript><p style="position:absolute;left:0;right:0;top:40%;text-align:center;color:#F5EFDF;font:24px system-ui,Arial,sans-serif">Esta presentación necesita JavaScript activado en el navegador.</p></noscript>
+
+<script>
+/* Motor de la presentación «Ecología cultural».
+   Todo lo que se mueve es función pura del tiempo (reloj en segundos): el cuadro t siempre da la misma imagen.
+   Revisión: ?s=N&t=SEG en la liga, o __ir(N, SEG) en la consola, deja la lámina N congelada en el segundo SEG de su entrada. */
+(() => {
+'use strict';
+const W = 1920, H = 1080, TITULO = 'Ecología cultural';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const clamp = (x, a = 0, b = 1) => (x < a ? a : x > b ? b : x);
+const lerp = (a, b, t) => a + (b - a) * t;
+const K10 = 1 - Math.pow(2, -10);
+const expoOut = (u) => (u <= 0 ? 0 : u >= 1 ? 1 : (1 - Math.pow(2, -10 * u)) / K10);
+const cubOut = (u) => 1 - Math.pow(1 - clamp(u), 3);
+const sinIO = (u) => 0.5 - 0.5 * Math.cos(Math.PI * clamp(u));
+const mod = (x, m) => ((x % m) + m) % m;
+// Respuesta al escalón de un oscilador amortiguado (forma cerrada; t en s, w en rad/s). Sin rebote visible: z ≥ 0.8
+const resorte = (t, w, z) => {
+  if (t <= 0) return 0;
+  if (z < 1) { const wd = w * Math.sqrt(1 - z * z); return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + (z * w / wd) * Math.sin(wd * t)); }
+  return 1 - Math.exp(-w * t) * (1 + w * t);
+};
+const azar = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+const hex = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+const mez = (a, b, t) => [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+const rgb = (a) => `rgb(${Math.round(a[0])},${Math.round(a[1])},${Math.round(a[2])})`;
+const tri = (a) => `${Math.round(a[0])} ${Math.round(a[1])} ${Math.round(a[2])}`;
+const f1 = (n) => n.toFixed(1), f2 = (n) => n.toFixed(2);
+
+const raiz = document.documentElement, lienzo = $('#lienzo'), marco = $('#marco');
+const consulta = new URLSearchParams(location.search);
+const RM = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) && consulta.get('rm') !== '0' || consulta.get('rm') === '1';
+if (RM) raiz.classList.add('rm');
+// Calidad: se arranca en «base» (vidrio claro, lo más ligero); si el equipo sostiene el ritmo en reposo se sube a «fino»
+// (vidrio esmerilado + grano), y si ni «base» corre bien se baja a «bajo». ?q=fino|base|bajo la fija (para revisar).
+const Q = { quieto: RM, modo: 'base', fijo: ['fino', 'base', 'bajo'].includes(consulta.get('q')), n: 0, s: 0, malas: 0, prueba: 0 };
+function ponerModo(m) { Q.modo = m; Q.quieto = m === 'bajo' || RM; raiz.classList.toggle('fino', m === 'fino'); raiz.classList.toggle('bajo', m === 'bajo'); Q.n = 0; Q.s = 0; Q.malas = 0; }
+if (Q.fijo) ponerModo(consulta.get('q'));
+
+/* =====================================================================  MUNDO  */
+const PX = 960, PY = 610;                         // pivote del zoom (el horizonte)
+const mundoEl = $('#mundo'), mundoG = $('#mundo-g'), frenteG = $('#frente-g');
+// hora: -0.17 antes de amanecer · 0 amanecer · 0.5 mediodía · 1 atardecer
+const CIELO = [
+  { h: -0.17, c: ['#02080D', '#051419', '#0A2327', '#16312F'], bruma: '#0A2022', nube: '#1B2F38', sol: '#F4B851', halo: '#E9A23B', ha: 0.0, osc: 0.50, est: 0.95, ray: 0.0, pol: 0.25 },
+  { h: 0.0, c: ['#061B22', '#0E3B40', '#3D7166', '#F3BC6C'], bruma: '#D49A62', nube: '#F7C596', sol: '#FFE6AE', halo: '#F4B851', ha: 0.80, osc: 0.08, est: 0.12, ray: 0.95, pol: 0.95 },
+  { h: 0.22, c: ['#072C38', '#125C68', '#58ABA1', '#F2DFB2'], bruma: '#B5D3BD', nube: '#FFF3DA', sol: '#FFF1C8', halo: '#FFE2A0', ha: 0.46, osc: 0.0, est: 0.0, ray: 0.45, pol: 0.7 },
+  { h: 0.5, c: ['#07303F', '#12687A', '#63BDB4', '#E6F2DA'], bruma: '#A5D0C6', nube: '#FFFFFF', sol: '#FFF8E0', halo: '#FFF0C0', ha: 0.40, osc: 0.0, est: 0.0, ray: 0.3, pol: 0.6 },
+  { h: 0.8, c: ['#0A2A40', '#27586C', '#C48C5E', '#F4B851'], bruma: '#D4985C', nube: '#FFD6A6', sol: '#FFDF9E', halo: '#F4B851', ha: 0.56, osc: 0.04, est: 0.0, ray: 0.7, pol: 0.85 },
+  { h: 1.0, c: ['#11132E', '#432846', '#A8481F', '#F4B851'], bruma: '#B45638', nube: '#F0A078', sol: '#FFC873', halo: '#E9853B', ha: 0.66, osc: 0.14, est: 0.10, ray: 0.85, pol: 1.0 },
+];
+CIELO.forEach((k) => { k.c = k.c.map(hex); for (const n of ['bruma', 'nube', 'sol', 'halo']) k[n] = hex(k[n]); });
+const solEn = (h) => {                             // el sol recorre un arco de derecha (amanecer) a izquierda (atardecer)
+  const hh = clamp(h, 0, 1), s = Math.sin(Math.PI * (0.04 + 0.92 * hh));
+  return { x: 1420 - 900 * hh, y: 610 - 190 * s + (h < 0 ? -h * 1000 : 0), r: 150 - 52 * s };
+};
+const CAPAS = [
+  { id: 'nubes-a', tipo: 'nubes', par: 0.03, dz: 0.16, P: 3600, vel: 5, seed: 11, n: 8, estilo: 'estrato', y0: 296, yr: 240, w0: 380, wr: 520 },
+  { id: 'sierra', tipo: 'cerro', par: 0.06, dz: 0.26, P: 3600, base: 598, amp: 30, arm: 9, rug: 0.8, color: '#3C6B66', seed: 21, volcan: true, bruma: 0.34 },
+  { id: 'nubes-b', tipo: 'nubes', par: 0.10, dz: 0.34, P: 3200, vel: 11, seed: 12, n: 5, estilo: 'cumulo', y0: 318, yr: 150, w0: 300, wr: 280 },
+  { id: 'c2', tipo: 'cerro', par: 0.13, dz: 0.42, P: 3000, base: 652, amp: 44, arm: 6, color: '#2B6A4E', seed: 22, bruma: 0.26 },
+  { id: 'c3', tipo: 'cerro', par: 0.24, dz: 0.56, P: 2800, base: 724, amp: 50, arm: 6, color: '#1F5540', seed: 23, arboles: 1, bruma: 0.17 },
+  { id: 'c4', tipo: 'cerro', par: 0.42, dz: 0.74, P: 3100, base: 808, amp: 42, arm: 5, color: '#163F30', seed: 24, surcos: 1, pueblo: 1, arboles: 2, bruma: 0.08 },
+  { id: 'c5', tipo: 'cerro', par: 0.72, dz: 1.0, P: 2600, base: 916, amp: 34, arm: 5, color: '#0D2A20', seed: 25, magueyes: 1 },
+  { id: 'plantas', tipo: 'plantas', par: 1.2, dz: 1.5, P: 2900, seed: 26 },
+];
+const FOLLAJE = { par: 2.4, dz: 2.2, P: 3648 };  // primer plano que cruza el cuadro al viajar: 760 px de cámara = 1824 px = P/2
+const PASO_CAM = 760;
+
+function hacerCerro(c) {
+  const r = azar(c.seed), P = c.P, n = 3, extra = c.volcan ? 250 : 90;
+  const top = Math.round(c.base - c.amp * 1.7 - extra), alto = H - top + 280, y0 = c.base - top;
+  const comps = []; let norm = 0;
+  for (let k = 1; k <= c.arm; k++) { const a = (0.3 + r() * 0.7) / Math.pow(k, c.rug || 0.9); comps.push([k, a, r() * 6.2832]); norm += a; }
+  const bultos = c.volcan ? [[0.655, 218, 330, 1.55, 1], [0.50, 120, 300, 1.2, 0], [0.56, 86, 150, 1.1, 0], [0.12, 72, 360, 1.3, 0]] : [];
+  const yEn = (x) => {
+    let s = 0; for (const m of comps) s += m[1] * Math.sin(6.2832 * m[0] * x / P + m[2]);
+    let v = y0 - c.amp * 1.5 * s / norm; const u = mod(x, P);
+    for (const b of bultos) { let d = Math.abs(u - b[0] * P); d = Math.min(d, P - d); if (d < b[2]) { let k = b[1] * Math.pow(1 - d / b[2], b[3]); if (b[4]) k = Math.min(k, b[1] - 9); v -= k; } }
+    return v;
+  };
+  let d = `M0,${alto}`; for (let x = 0; x <= n * P; x += 12) d += `L${x},${f1(yEn(x))}`; d += `L${n * P},${alto}Z`;
+  let pre = '', post = '';
+  if (c.volcan) for (let j = 0; j < n; j++) {     // nieve del volcán
+    const cx = (j + 0.655) * P, lim = yEn(cx) + 74, xs = [];
+    for (let x = cx - 210; x <= cx + 210; x += 6) if (yEn(x) < lim) xs.push(x);
+    if (xs.length > 2) {
+      let s = `M${xs[0]},${f1(yEn(xs[0]))}`; for (const x of xs) s += `L${x},${f1(yEn(x))}`;
+      for (let i = xs.length - 1; i >= 0; i--) { const x = xs[i], yr = yEn(x); s += `L${x},${f1(Math.min(lim + 6, yr + (lim - yr) * (0.5 + 0.5 * Math.abs(Math.sin(x * 0.13)))))}`; }
+      post += `<path d="${s}Z" fill="#EEF3EC" opacity=".8"/>`;
+    }
+  }
+  if (c.arboles) {
+    const rr = azar(c.seed + 5), col = rgb(mez(hex(c.color), [0, 0, 0], 0.3)), pts = []; let x = rr() * 60;
+    while (x < P) { const g = c.arboles === 1 ? 7 + rr() * 8 : 12 + rr() * 16; if (rr() < 0.7) pts.push([x, g, rr()]); x += g * (1.2 + rr() * 5); }
+    for (let j = 0; j < n; j++) for (const [px, g, k] of pts) { const X = j * P + px, Y = yEn(X); pre += `<ellipse cx="${f1(X)}" cy="${f1(Y - g * 0.7)}" rx="${f1(g * (0.8 + k * 0.35))}" ry="${f1(g)}" fill="${col}"/>`; }
+  }
+  if (c.surcos) for (const dy of [44, 82, 122]) {  // surcos de milpa
+    let s = ''; for (let x = 0; x <= n * P; x += 24) s += `${x ? 'L' : 'M'}${x},${f1(yEn(x) + dy + 10 * Math.sin(x / 190))}`;
+    post += `<path d="${s}" fill="none" stroke="#3E8F68" stroke-width="3" opacity=".3"/>`;
+  }
+  if (c.pueblo) for (let j = 0; j < n; j++) pre += pueblo((j + 0.335) * P, yEn);
+  if (c.magueyes) {
+    const rr = azar(c.seed + 9), col = rgb(mez(hex(c.color), [0, 0, 0], 0.22)), pts = []; let x = 80 + rr() * 200;
+    while (x < P - 60) { pts.push([x, 34 + rr() * 30, rr()]); x += 190 + rr() * 520; }
+    for (let j = 0; j < n; j++) for (const [px, L, k] of pts) { const X = j * P + px, Y = yEn(X) + 8; pre += k < 0.62 ? maguey(X, Y, L, col) : nopal(X, Y, L * 0.5, col); }
+  }
+  const el = document.createElement('div'); el.className = 'capa cerro ' + c.id; el.style.width = n * P + 'px'; el.style.height = alto + 'px';
+  el.innerHTML = `<svg width="${n * P}" height="${alto}" viewBox="0 0 ${n * P} ${alto}" aria-hidden="true">${pre}<path d="${d}" fill="${c.color}"/>${post}</svg>`;
+  c.el = el; c.top = top; return el;
+}
+function pueblo(X, yEn) {
+  const mur = '#2C5646', mur2 = '#386856', tej = '#7A3F22', lu = '#F4B851'; let s = '';
+  const casa = (dx, w, h, t) => { const x = X + dx, Y = yEn(x + w / 2) + 3; s += `<rect x="${f1(x)}" y="${f1(Y - h)}" width="${w}" height="${h + 40}" fill="${mur}"/>`; if (t) s += `<path d="M${f1(x - 3)},${f1(Y - h)} L${f1(x + w / 2)},${f1(Y - h - w * 0.32)} L${f1(x + w + 3)},${f1(Y - h)}Z" fill="${tej}"/>`; s += `<rect class="vent" x="${f1(x + w * 0.32)}" y="${f1(Y - h * 0.66)}" width="5" height="7" fill="${lu}"/>`; };
+  casa(-150, 38, 24, 1); casa(-104, 30, 30, 0); casa(-66, 42, 22, 1);
+  const Y = yEn(X + 30) + 3;
+  s += `<rect x="${f1(X - 16)}" y="${f1(Y - 52)}" width="64" height="92" fill="${mur2}"/><path d="M${f1(X - 2)},${f1(Y - 52)} a18,18 0 0 1 36,0Z" fill="${tej}"/>`;
+  s += `<rect x="${f1(X + 50)}" y="${f1(Y - 92)}" width="22" height="132" fill="${mur2}"/><path d="M${f1(X + 47)},${f1(Y - 92)} L${f1(X + 61)},${f1(Y - 113)} L${f1(X + 75)},${f1(Y - 92)}Z" fill="${tej}"/>`;
+  s += `<path d="M${f1(X + 61)},${f1(Y - 126)}v13M${f1(X + 56)},${f1(Y - 121)}h10" stroke="${mur2}" stroke-width="2.5" fill="none"/>`;
+  s += `<rect class="vent" x="${f1(X + 8)}" y="${f1(Y - 34)}" width="8" height="14" rx="4" fill="${lu}"/><rect class="vent" x="${f1(X + 57.5)}" y="${f1(Y - 78)}" width="7" height="10" rx="3" fill="${lu}"/>`;
+  casa(90, 36, 26, 1); casa(134, 44, 20, 0); casa(186, 30, 28, 1);
+  return s;
+}
+function maguey(X, Y, L, col) {
+  let s = ''; const N = 7;
+  for (let i = 0; i < N; i++) { const a = (-72 + i * (144 / (N - 1))) * Math.PI / 180, sx = Math.sin(a), cy = Math.cos(a), w = L * 0.11; const tx = X + sx * L, ty = Y - cy * L * 0.92, nx = cy * w, ny = sx * w, mx = X + sx * L * 0.5, my = Y - cy * L * 0.5 - L * 0.1; s += `M${f1(X - nx)},${f1(Y - ny)} Q${f1(mx - nx)},${f1(my - ny)} ${f1(tx)},${f1(ty)} Q${f1(mx + nx)},${f1(my + ny)} ${f1(X + nx)},${f1(Y + ny)}Z`; }
+  return `<path d="${s}" fill="${col}"/>`;
+}
+function nopal(X, Y, R, col) {
+  const p = (x, y, rx, ry, g) => `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(rx)}" ry="${f1(ry)}" transform="rotate(${g} ${f1(x)} ${f1(y)})" fill="${col}"/>`;
+  return p(X, Y - R, R * 0.62, R, 0) + p(X - R * 0.72, Y - R * 2.2, R * 0.5, R * 0.8, -24) + p(X + R * 0.66, Y - R * 2.35, R * 0.48, R * 0.78, 20) + p(X + R * 0.1, Y - R * 3.5, R * 0.36, R * 0.56, 6);
+}
+function hacerNubes(c) {
+  const el = document.createElement('div'); el.className = 'capa nubes ' + c.id; el.style.width = 3 * c.P + 'px'; el.style.height = '760px'; let h = '';
+  for (let j = 0; j < 3; j++) {
+    const r = azar(c.seed);
+    for (let k = 0; k < c.n; k++) {
+      const x = j * c.P + ((k + r() * 0.7) / c.n) * c.P, y = c.y0 + r() * c.yr, w = c.w0 + r() * c.wr, a = 0.26 + r() * 0.42;
+      if (c.estilo === 'estrato') { h += `<i style="left:${f1(x)}px;top:${f1(y)}px;width:${f1(w)}px;height:${f1(w * (0.06 + r() * 0.05))}px;opacity:${f2(a)}"></i>`; r(); }
+      else for (let b = 0; b < 5; b++) { const bw = w * (0.34 + r() * 0.3); h += `<i style="left:${f1(x + (b - 2) * w * 0.17 + r() * 20)}px;top:${f1(y + (b % 2 ? -1 : 1) * bw * 0.1 + r() * 14)}px;width:${f1(bw)}px;height:${f1(bw * (0.42 + r() * 0.16))}px;opacity:${f2(a + 0.15)}"></i>`; }
+    }
+  }
+  el.innerHTML = h; c.el = el; c.top = 0; return el;
+}
+function milpa(r, h) {                             // una mata de maíz, silueta
+  const w = 190, cx = w / 2, lean = (r() - 0.5) * 30, c1 = '#0B241C', c2 = '#123629'; let hojas = '', hojas2 = '';
+  const tallo = `M${f1(cx - 4)},${h + 24} Q${f1(cx + lean * 0.4)},${f1(h * 0.5)} ${f1(cx + lean)},24 L${f1(cx + lean + 4)},26 Q${f1(cx + lean * 0.4 + 6)},${f1(h * 0.5)} ${f1(cx + 5)},${h + 24} Z`;
+  const nh = 5 + Math.floor(r() * 3);
+  for (let i = 0; i < nh; i++) {
+    const t = 0.16 + i * (0.7 / nh) + r() * 0.03, y = 24 + (h - 24) * (1 - t), x = cx + lean * t, dir = i % 2 ? 1 : -1, L = 58 + r() * 34, up = 26 + r() * 26, drop = 16 + r() * 30;
+    const s = `M${f1(x)},${f1(y)} Q${f1(x + dir * L * 0.45)},${f1(y - up - 14)} ${f1(x + dir * L)},${f1(y - up + drop)} Q${f1(x + dir * L * 0.5)},${f1(y - up + 4)} ${f1(x)},${f1(y + 11)} Z`;
+    if (i % 3 === 1) hojas2 += s; else hojas += s;
+  }
+  let esp = ''; for (const k of [-1, 0, 1]) esp += `M${f1(cx + lean + 1)},26 L${f1(cx + lean + k * 10)},2 L${f1(cx + lean + k * 10 + 3)},3 Z`;
+  return { w, h: h + 24, svg: `<path d="${tallo}${hojas}${esp}" fill="${c1}"/><path d="${hojas2}" fill="${c2}"/>` };
+}
+function pasto(r, h) {
+  const w = 150; let s = ''; const n = 7 + Math.floor(r() * 5);
+  for (let i = 0; i < n; i++) { const x = 20 + r() * (w - 40), L = h * (0.45 + r() * 0.55), b = (r() - 0.5) * 70; s += `M${f1(x - 4)},${h} Q${f1(x + b * 0.2)},${f1(h - L * 0.6)} ${f1(x + b)},${f1(h - L)} Q${f1(x + b * 0.35 + 5)},${f1(h - L * 0.55)} ${f1(x + 5)},${h} Z`; }
+  return { w, h, svg: `<path d="${s}" fill="#0A2019"/>` };
+}
+function hacerPlantas(c) {
+  const el = document.createElement('div'); el.className = 'capa plantas'; el.style.width = 3 * c.P + 'px'; el.style.height = '470px'; let h = '';
+  for (let j = 0; j < 3; j++) {
+    const r = azar(c.seed); let x = 40 + r() * 80;
+    while (x < c.P - 60) {
+      const esMilpa = r() < 0.6, alto = esMilpa ? 170 + r() * 150 : 70 + r() * 70, p = esMilpa ? milpa(r, alto) : pasto(r, alto);
+      h += `<svg class="planta" width="${p.w}" height="${f1(p.h)}" viewBox="0 0 ${p.w} ${f1(p.h)}" style="left:${f1(j * c.P + x - p.w / 2)}px;--dur:${f1(4.2 + r() * 2.6)}s;--fase:${f1(-r() * 6)}s" aria-hidden="true">${p.svg}</svg>`;
+      x += esMilpa ? 70 + r() * 190 : 60 + r() * 120; if (r() < 0.22) x += 260 + r() * 300;
+    }
+  }
+  el.innerHTML = h; c.el = el; c.top = H - 448; return el;
+}
+function hojaGrande(x0, y0, ang, L, wd) {          // hoja lanceolada desde (x0,y0)
+  const a = ang * Math.PI / 180, dx = Math.sin(a), dy = -Math.cos(a), nx = -dy, ny = dx, tx = x0 + dx * L, ty = y0 + dy * L, mx = x0 + dx * L * 0.5, my = y0 + dy * L * 0.5;
+  return `M${f1(x0)},${f1(y0)} Q${f1(mx + nx * wd)},${f1(my + ny * wd)} ${f1(tx)},${f1(ty)} Q${f1(mx - nx * wd)},${f1(my - ny * wd)} ${f1(x0)},${f1(y0)}Z`;
+}
+function hacerFollaje() {
+  const P = FOLLAJE.P, el = document.createElement('div'); el.className = 'capa follaje-capa'; el.style.width = 3 * P + 'px'; el.style.height = H + 'px'; let h = '';
+  const mata = (u, seed, alto) => { const r = azar(seed); let s = ''; for (let i = 0; i < 9; i++) s += hojaGrande(150 + (r() - 0.5) * 60, alto + 40, -52 + i * 13 + r() * 6, alto * (0.55 + r() * 0.5), 14 + r() * 12); return `<svg class="follaje" width="300" height="${alto + 40}" viewBox="0 0 300 ${alto + 40}" style="left:${u - 150}px;bottom:-46px;--fase:${f1(-r() * 5)}s" aria-hidden="true"><path d="${s}" fill="#061510"/></svg>`; };
+  const rama = (u, seed) => { const r = azar(seed); let s = `M300,-20 Q170,30 30,96 L34,104 Q176,42 300,-6Z`; for (let i = 0; i < 8; i++) { const t = 0.12 + i * 0.11, x = 300 - 270 * t, y = -14 + 114 * t * t + 8; s += hojaGrande(x, y, 150 + (i % 2 ? 26 : -30) + r() * 20, 62 + r() * 40, 13 + r() * 8); } return `<svg class="follaje rama" width="320" height="230" viewBox="0 0 320 230" style="left:${u}px;top:-34px;--dur:7.6s;--fase:${f1(-r() * 5)}s" aria-hidden="true"><path d="${s}" fill="#061510"/></svg>`; };
+  for (let j = 0; j < 3; j++) {
+    const o = j * P;
+    h += mata(o + 6, 301, 150) + mata(o + 1824 + 2, 302, 132);         // en cada parada quedan a ras de las orillas de abajo; al viajar cruzan todo el cuadro
+    h += rama(o + 1600, 303);                                          // rama que asoma arriba: a la derecha en una parada, fuera del texto a la izquierda en la otra
+  }
+  el.innerHTML = h; FOLLAJE.el = el; FOLLAJE.top = 0; return el;
+}
+function construirMundo() {
+  mundoG.innerHTML = '<div id="cielo"></div><div id="estrellas"></div><div id="rayos"><i></i></div><div id="halo"></div><div id="sol"></div>';
+  { const r = azar(5), s = []; for (let i = 0; i < 110; i++) { const a = 0.35 + r() * 0.65, t = r() < 0.12 ? 1.6 : 0.6; s.push(`${Math.round(r() * 2200 - 140)}px ${Math.round(r() * 560 - 40)}px 0 ${t}px rgba(255,246,224,${f2(a)})`); } $('#estrellas').style.boxShadow = s.join(','); }
+  for (const c of CAPAS) {
+    mundoG.appendChild(c.tipo === 'cerro' ? hacerCerro(c) : c.tipo === 'nubes' ? hacerNubes(c) : hacerPlantas(c));
+    if (c.bruma) { const b = document.createElement('div'); b.className = 'bruma'; b.style.top = c.base - 150 + 'px'; b.style.setProperty('--a', c.bruma); mundoG.appendChild(b); }
+  }
+  const mas = document.createElement('div'); mas.innerHTML = '<div id="oscuro"></div><div id="calor"></div><canvas id="polen" width="1920" height="1080"></canvas>';
+  while (mas.firstChild) mundoG.appendChild(mas.firstChild);
+  frenteG.appendChild(hacerFollaje());
+  const cv = document.createElement('canvas'); cv.id = 'hojas'; cv.width = W; cv.height = H; frenteG.appendChild(cv);
+  // grano 35 mm: mosaico de ruido con semilla fija
+  try { const g = document.createElement('canvas'); g.width = g.height = 256; const x = g.getContext('2d'), im = x.createImageData(256, 256), r = azar(1935); for (let i = 0; i < im.data.length; i += 4) { const v = 96 + r() * 64 + r() * 64; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; } x.putImageData(im, 0, 0); $('#grano').style.backgroundImage = `url(${g.toDataURL('image/png')})`; } catch (e) { /* sin grano */ }
+}
+const ult = { hora: 99, calor: -1, luz: '', n: 0 };
+let solEl, haloEl, rayosEl, calorEl, polenK = 0.8;
+function aplicarHora(h) {
+  let k = 0; while (k < CIELO.length - 2 && h > CIELO[k + 1].h) k++;
+  const a = CIELO[k], b = CIELO[k + 1], t = clamp((h - a.h) / (b.h - a.h)), s = mundoEl.style, n = (q) => lerp(a[q], b[q], t);
+  for (let i = 0; i < 4; i++) s.setProperty('--c' + (i + 1), rgb(mez(a.c[i], b.c[i], t)));
+  s.setProperty('--bruma', tri(mez(a.bruma, b.bruma, t))); s.setProperty('--nube', tri(mez(a.nube, b.nube, t)));
+  s.setProperty('--sol', rgb(mez(a.sol, b.sol, t))); s.setProperty('--halo', tri(mez(a.halo, b.halo, t)));
+  s.setProperty('--ha', f2(n('ha'))); s.setProperty('--osc', f2(n('osc'))); s.setProperty('--est', f2(n('est'))); s.setProperty('--ray', f2(n('ray')));
+  s.setProperty('--vent', f2(clamp(n('osc') * 5 + n('est') * 2 + (h > 0.85 ? (h - 0.85) * 5 : 0))));
+  polenK = n('pol');
+  const p = solEn(h), ang = Math.round(Math.atan2(PX - p.x, -(540 - p.y)) * 180 / Math.PI), luz = ang + 'deg';   // el borde de luz del vidrio mira al sol
+  if (luz !== ult.luz) { lienzo.style.setProperty('--luz', luz); ult.luz = luz; }
+}
+function pintarMundo(cam, T) {
+  ult.n++;                                         // el color del cielo se repinta a lo más cada 2 cuadros (son degradados grandes)
+  if (Math.abs(cam.hora - ult.hora) > 0.0012 && (ult.n % 2 === 0 || ult.hora > 9 || Tfijo != null)) { aplicarHora(cam.hora); ult.hora = cam.hora; }
+  if (Math.abs(cam.calor - ult.calor) > 0.004) { calorEl.style.opacity = f2(cam.calor); ult.calor = cam.calor; }
+  const z = cam.zoom - 1;
+  const pone = (c, off, yExtra) => {
+    const tx = -c.P - mod(off, c.P), s = 1 + z * c.dz, X = PX + s * (tx - PX), Y = PY + s * (c.top + yExtra - PY);
+    c.el.style.transform = `translate3d(${f2(X)}px,${f2(Y)}px,0) scale(${s.toFixed(5)})`;
+  };
+  for (const c of CAPAS) pone(c, cam.x * c.par + (c.vel && !Q.quieto ? c.vel * T : 0) + cam.px * c.par * 34, (cam.y + cam.py * 16) * c.par);
+  pone(FOLLAJE, cam.x * FOLLAJE.par + cam.px * 60, (cam.y + cam.py * 20) * 1.6);
+  const p = solEn(cam.hora), s = 1 + z * 0.12, sx = PX + s * (p.x - cam.px * 2 - PX), sy = PY + s * (p.y + cam.y * 0.02 - PY), k = (p.r / 150) * s;
+  solEl.style.transform = `translate3d(${f2(sx)}px,${f2(sy)}px,0) scale(${k.toFixed(4)})`;
+  haloEl.style.transform = `translate3d(${f2(sx)}px,${f2(sy)}px,0) scale(${(s * (0.92 + (Q.quieto ? 0 : 0.03 * Math.sin(T * 0.6)))).toFixed(4)})`;
+  rayosEl.style.transform = `translate3d(${f2(sx)}px,${f2(sy)}px,0)`;
+  const g = `perspective(1900px) rotateY(${cam.yaw.toFixed(3)}deg) rotateZ(${cam.giro.toFixed(3)}deg) scale(1.05)`;
+  mundoG.style.transform = g; frenteG.style.transform = g;
+}
+
+/* ---------- partículas: polen (atrás) y ráfaga de hojas (al frente, solo al viajar) ---------- */
+let cxA, cxB, destello, HOJAS = [], HOJAS_B = [];
+const POLEN = [], RAFAGA = [], AVES = [[0, 372, 1.05, 0, 0.3, 6.4], [46, 352, 0.9, 2, 1.7, 7.1], [58, 398, 0.85, 1, 2.9, 6.8], [104, 334, 0.75, 3, 4.1, 7.6], [122, 420, 0.7, 2, 5.2, 7.3], [170, 318, 0.62, 4, 0.9, 8.0]];
+function prepararParticulas() {
+  cxA = $('#polen').getContext('2d'); cxB = $('#hojas').getContext('2d');
+  destello = document.createElement('canvas'); destello.width = destello.height = 64;
+  { const x = destello.getContext('2d'), g = x.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, 'rgba(255,246,214,1)'); g.addColorStop(0.22, 'rgba(255,226,160,.6)'); g.addColorStop(1, 'rgba(255,200,120,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); }
+  const hoja = (col, blur) => {
+    const c = document.createElement('canvas'); c.width = 160; c.height = 110; const x = c.getContext('2d');
+    if (blur && 'filter' in x) x.filter = `blur(${blur}px)`;
+    x.translate(80, 55); x.beginPath(); x.moveTo(-48, 0); x.bezierCurveTo(-22, -32, 22, -30, 50, 0); x.bezierCurveTo(22, 27, -22, 28, -48, 0); x.closePath();
+    const g = x.createLinearGradient(0, -28, 0, 28); g.addColorStop(0, col); g.addColorStop(1, rgb(mez(hex(col), [10, 20, 14], 0.5))); x.fillStyle = g; x.fill();
+    x.strokeStyle = 'rgba(8,24,18,.35)'; x.lineWidth = 2.2; x.beginPath(); x.moveTo(-46, 0); x.quadraticCurveTo(0, -6, 48, 0); x.stroke(); return c;
+  };
+  for (const col of ['#7FB069', '#E9A23B', '#A8481F', '#5E9150', '#F4B851']) { HOJAS.push(hoja(col, 0)); HOJAS_B.push(hoja(col, 5)); }
+  let r = azar(77);
+  for (let i = 0; i < 56; i++) POLEN.push({ x: r() * (W + 300), y: r() * (H + 120), s: 1.2 + r() * r() * 5.5, d: 0.25 + r() * 0.9, vx: 6 + r() * 22, vy: -(3 + r() * 13), wa: 10 + r() * 30, wf: 0.3 + r() * 0.9, ph: r() * 6.28, a: 0.25 + r() * 0.6 });
+  r = azar(91);
+  for (let i = 0; i < 12; i++) RAFAGA.push({ t: r() * 1.9, y: 110 + r() * 840, v: 600 + r() * 640, s: 0.42 + r() * 0.9, sp: (r() - 0.5) * 8, fl: 2 + r() * 5, wy: 26 + r() * 70, wf: 1 + r() * 2.2, ph: r() * 6.28, c: i % 5, n: r() < 0.36 });
+}
+function pintarParticulas(cam, T) {
+  if (Q.quieto) { if (!E.partLimpio) { cxA.clearRect(0, 0, W, H); cxB.clearRect(0, 0, W, H); E.partLimpio = true; } return; }
+  E.partLimpio = false;
+  cxA.clearRect(0, 0, W, H); cxA.globalCompositeOperation = 'lighter';
+  const nP = Q.modo === 'bajo' ? 24 : POLEN.length, AW = W + 300, AH = H + 120;
+  for (let i = 0; i < nP; i++) {
+    const p = POLEN[i];
+    const x = mod(p.x + p.vx * T - cam.x * p.d * 0.55 + p.wa * Math.sin(p.wf * T + p.ph), AW) - 150, y = mod(p.y + p.vy * T + p.wa * 0.5 * Math.cos(p.wf * 0.8 * T + p.ph), AH) - 60;
+    const sz = p.s * (6 + p.d * 7) * (1 + (cam.zoom - 1) * p.d);
+    cxA.globalAlpha = p.a * (0.55 + 0.45 * Math.sin(T * 1.7 + p.ph * 3)) * polenK; cxA.drawImage(destello, x - sz / 2, y - sz / 2, sz, sz);
+  }
+  cxA.globalAlpha = 1; cxA.globalCompositeOperation = 'source-over';
+  if (E.i === 0 && !RM) {                          // parvada que cruza frente al sol en la portada
+    const t = T - E.tNav - 1.0;
+    if (t > 0 && t < 30) {
+      cxA.strokeStyle = '#081A18'; cxA.lineCap = 'round'; cxA.globalAlpha = clamp(t / 1.5) * clamp((30 - t) / 2) * 0.9;
+      for (const a of AVES) { const x = 1790 + a[0] - (36 + a[3]) * t, y = a[1] + 12 * Math.sin(t * 0.5 + a[4]) - 2.5 * t, s = a[2], al = Math.sin(t * a[5] + a[4]) * 0.55; cxA.lineWidth = 2.6 * s; cxA.beginPath(); cxA.moveTo(x - 17 * s, y - 9 * s * al - 3 * s); cxA.quadraticCurveTo(x - 7 * s, y - 8 * s * (al + 0.55), x, y); cxA.quadraticCurveTo(x + 7 * s, y - 8 * s * (al + 0.55), x + 17 * s, y - 9 * s * al - 3 * s); cxA.stroke(); }
+      cxA.globalAlpha = 1;
+    }
+  }
+  // ráfaga: hojas que cruzan en sentido contrario al viaje (en la portada, viento suave de izquierda a derecha)
+  const tau = T - E.tNav - (E.intro ? 0.7 : 0.02);
+  if (tau < 0 || tau > 6.5 || RM) { if (!E.hojasLimpio) { cxB.clearRect(0, 0, W, H); E.hojasLimpio = true; } return; }
+  cxB.clearRect(0, 0, W, H); E.hojasLimpio = false;
+  const sentido = E.intro ? 1 : -E.dir, nH = E.intro || E.salto ? RAFAGA.length : 8;
+  for (let i = 0; i < nH; i++) {
+    const h = RAFAGA[i], t = tau - h.t * (E.intro ? 1.5 : 0.45); if (t < 0) continue;
+    const rec = h.v * (E.intro ? 0.62 : 1.5) * t; if (rec > W + 420) continue;
+    const x = sentido > 0 ? -210 + rec : W + 210 - rec, y = h.y + h.wy * Math.sin(h.wf * t + h.ph) - 30 * t, sc = h.s * (h.n ? 1.9 : 1);
+    cxB.save(); cxB.translate(x, y); cxB.rotate(h.sp * t + h.ph); cxB.scale(sc, sc * Math.cos(h.fl * t + h.ph)); cxB.globalAlpha = h.n ? 0.82 : 0.96;
+    cxB.drawImage(h.n ? HOJAS_B[h.c] : HOJAS[h.c], -80, -55); cxB.restore();
+  }
+}
+
+/* =====================================================================  LÁMINAS  */
+const TIPOS = {
+  sube: { dur: 0.8, de: { x: 0, y: 64, z: -440, rx: -24, ry: 0, rz: 0, s: 1, blur: 12 } },
+  aparece: { dur: 0.6, de: { x: 0, y: 0, z: -60, rx: 0, ry: 0, rz: 0, s: 1, blur: 8 } },
+  palabras: { dur: 0.72, paso: 0.07, de: { x: 0, y: 44, z: -360, rx: -68, ry: 0, rz: 0, s: 1, blur: 10 } },
+  letras: { dur: 0.98, paso: 0.045, de: { x: 0, y: 96, z: -1300, rx: 0, ry: -52, rz: 0, s: 1, blur: 20 } },
+  resorte: { dur: 0.9, res: [13, 0.8], de: { x: 0, y: 46, z: -300, rx: -18, ry: 22, rz: 0, s: 0.3, blur: 8 } },
+  abanico: { dur: 0.95, res: [10.5, 0.82], de: { x: 0, y: 0, z: -420, rx: 0, ry: -28, rz: 0, s: 0.5, blur: 10 } },
+};
+const ESP = { flecha: 0.3, llena: 1.4, orbita: 1.1 };   // tipos especiales y su duración por defecto
+function partir(el, modo) {
+  const out = [];
+  const andar = (n) => {
+    for (const c of Array.from(n.childNodes)) {
+      if (c.nodeType === 3) {
+        const fr = document.createDocumentFragment();
+        for (const p of c.textContent.split(/(\s+)/)) {
+          if (!p) continue;
+          if (/^\s+$/.test(p)) { fr.appendChild(document.createTextNode(' ')); continue; }
+          if (modo === 'palabras') { const s = document.createElement('span'); s.className = 'pal'; s.textContent = p; fr.appendChild(s); out.push(s); }
+          else { const w = document.createElement('span'); w.className = 'palabra'; for (const ch of Array.from(p)) { const s = document.createElement('span'); s.className = 'let'; s.textContent = ch; w.appendChild(s); out.push(s); } fr.appendChild(w); }
+        }
+        n.replaceChild(fr, c);
+      } else if (c.nodeType === 1 && c.tagName !== 'BR') andar(c);
+    }
+  };
+  el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim()); andar(el); return out;
+}
+const baseDe = (d) => ({ x: +d.x || 0, y: +d.y || 0, z: +d.z || 0, rx: +d.rx || 0, ry: +d.ry || 0, rz: +d.rz || 0, s: 1 });
+const tf = (o) => `translate3d(${f2(o.x)}px,${f2(o.y)}px,${f2(o.z)}px)` + (o.rx ? ` rotateX(${o.rx.toFixed(3)}deg)` : '') + (o.ry ? ` rotateY(${o.ry.toFixed(3)}deg)` : '') + (o.rz ? ` rotateZ(${o.rz.toFixed(3)}deg)` : '') + (o.s !== 1 ? ` scale(${o.s.toFixed(4)})` : '');
+const CERO = { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, s: 1 };
+
+function preparar(el, i) {
+  const aside = el.querySelector(':scope > aside'), notas = aside ? aside.textContent.trim() : ''; if (aside) aside.remove();
+  const cuerpo = document.createElement('div'); cuerpo.className = 'cuerpo'; while (el.firstChild) cuerpo.appendChild(el.firstChild); el.appendChild(cuerpo);
+  for (const v of $$('.vidrio', cuerpo)) {         // vidrio = cara (con el contenido) + canto detrás (grosor y sombra de contacto); lo marcado «fuera» flota sobre la cara
+    const cara = document.createElement('div'); cara.className = 'cara'; const fuera = [];
+    while (v.firstChild) { const n = v.firstChild; if (n.nodeType === 1 && n.classList.contains('fuera')) { fuera.push(n); v.removeChild(n); } else cara.appendChild(n); }
+    const canto = document.createElement('i'); canto.className = 'canto';
+    if (v.dataset.barrido != null) { const b = document.createElement('i'); b.className = 'brillo'; cara.appendChild(b); }
+    v.append(canto, cara, ...fuera);
+  }
+  for (const m of $$('.moneda', cuerpo)) {         // moneda con grosor: 2 láminas detrás de la cara + aura + sombra
+    const cara = m.firstElementChild, fr = document.createDocumentFragment();
+    const so = document.createElement('i'); so.className = 'm-sombra'; const au = document.createElement('i'); au.className = 'm-aura'; fr.append(so, au);
+    for (let k = 2; k >= 1; k--) { const c = document.createElement('i'); c.className = 'm-canto'; c.style.transform = `translateZ(${-k * 8}px)`; fr.appendChild(c); }
+    m.insertBefore(fr, cara);
+  }
+  for (const g of $$('[data-hijos]', cuerpo)) {
+    const t0 = +g.dataset.t || 0, paso = +(g.dataset.paso || 0.07), hs = Array.from(g.children);
+    hs.forEach((h, k) => { if (h.dataset.a) return; h.dataset.a = g.dataset.hijos; h.dataset.t = (t0 + k * paso).toFixed(3); h.dataset.k = k; h.dataset.n = hs.length; if (g.dataset.dur) h.dataset.dur = g.dataset.dur; });
+  }
+  const piezas = [], vivos = [];
+  for (const g of $$('.g3d', cuerpo)) if (!g.dataset.a && (g.dataset.ry || g.dataset.rx || g.dataset.z)) g.style.transform = tf(baseDe(g.dataset));
+  for (const p of $$('[data-a]', cuerpo)) {
+    const d = p.dataset, tipo = d.a, t0 = +d.t || 0;
+    if (tipo === 'palabras' || tipo === 'letras') {
+      const def = TIPOS[tipo], paso = +(d.paso || def.paso), dur = +(d.dur || def.dur), trozos = partir(p, tipo);
+      p.style.transform = tf(baseDe(d));
+      trozos.forEach((s, k) => { if (tipo === 'letras') s.style.zIndex = 200 - k; piezas.push({ el: s, tipo, t0: t0 + k * paso, dur, de: def.de, base: CERO, hoja: true }); });
+      if (tipo === 'letras') p._ry = +d.ry || 0, p._rx = +d.rx || 0;
+    } else if (TIPOS[tipo]) {
+      const def = TIPOS[tipo], it = { el: p, tipo, t0, dur: +(d.dur || def.dur), res: def.res, de: Object.assign({}, def.de), base: baseDe(d), p3d: p.classList.contains('vidrio') || p.classList.contains('moneda'), hoja: false, k: +d.k || 0, n: +d.n || 1 };
+      if (d.barrido != null) it.barrido = +d.barrido;
+      piezas.push(it);
+    } else if (tipo in ESP) piezas.push({ el: p, tipo, t0, dur: +(d.dur || ESP[tipo]), esp: true });
+  }
+  const L = { el, cuerpo, piezas, vivos, notas, i, bloque: +el.dataset.bloque || 1, pie: el.dataset.pie != null ? el.dataset.pie : TITULO,
+    hora: el.dataset.hora != null ? +el.dataset.hora : null, calor: +el.dataset.calor || 0, portada: el.classList.contains('portada'),
+    ry: el.dataset.ry != null ? +el.dataset.ry : (el.classList.contains('portada') ? 0 : (i % 2 ? -2.2 : 2.2)), rx: el.dataset.rx != null ? +el.dataset.rx : (el.classList.contains('portada') ? 0 : 1.2), titulazo: $('.titulazo', cuerpo) };
+  return L;
+}
+function medir(L) {                                // medidas que dependen del layout (se rehacen si cambian las fuentes)
+  for (const h2 of $$('h2', L.cuerpo)) {           // nunca tres renglones de título: baja de 96 a 72 px si hace falta
+    h2.style.fontSize = ''; let px = 96;
+    while (px > 72 && h2.offsetHeight > px * 1.03 * 2.2) { px -= 6; h2.style.fontSize = px + 'px'; }
+    L.el.classList.toggle('titulo2', h2.offsetHeight > px * 1.03 * 1.5);
+  }
+  for (const it of L.piezas) {
+    if (it.tipo === 'abanico') { const g = it.el.parentElement, ox = g.offsetWidth / 2, oy = g.offsetHeight + 150; it.de.x = (ox - (it.el.offsetLeft + it.el.offsetWidth / 2)) * 0.94; it.de.y = oy - (it.el.offsetTop + it.el.offsetHeight / 2); it.de.rz = (it.k - (it.n - 1) / 2) * 10; it.de.z = -420 + it.k * 14; }
+    if (it.tipo === 'flecha') { it.trazo = $('.trazo', it.el); it.punta = $('.punta', it.el); it.len = it.trazo.getTotalLength(); it.tfPunta = it.punta.getAttribute('transform').replace(/ scale\([^)]*\)/, ''); }
+    if (it.tipo === 'llena') { it.pista = $('.pista', it.el); it.trazo = $('.relleno', it.el); it.cab = $('.punta-calor', it.el); it.len = it.trazo.getTotalLength(); }
+    if (it.tipo === 'orbita') { it.o1 = $('.o-base', it.el); it.o2 = $('.o-guion', it.el); it.cometa = $('.o-cometa', it.el); it.len = it.o1.getTotalLength(); }
+  }
+}
+function aplicar(it, tl, T) {
+  const t = tl - it.t0;
+  if (it.esp) return especial(it, t, T);
+  let p, o, b;
+  if (RM) { p = 1; o = clamp(tl / 0.25); b = 0; }
+  else if (t <= 0) { p = 0; o = 0; b = it.de.blur; }
+  else if (it.res) { p = resorte(t, it.res[0], it.res[1]); o = clamp(t / 0.2); b = (1 - clamp(t / (it.dur * 0.55))) * it.de.blur; }
+  else { p = expoOut(t / it.dur); o = clamp(t / (it.dur * 0.4)); b = (1 - cubOut(t / (it.dur * 0.66))) * it.de.blur; }
+  if (Q.modo === 'bajo') b = 0;                    // sin desenfoques cuando el equipo no da
+  const q = 1 - p, B = it.base, D = it.de, s = it.el.style;
+  s.transform = tf({ x: B.x + D.x * q, y: B.y + D.y * q, z: B.z + D.z * q, rx: B.rx + D.rx * q, ry: B.ry + D.ry * q, rz: B.rz + D.rz * q, s: 1 + (D.s - 1) * q });
+  if (it.p3d) { s.setProperty('--o', f2(o)); s.setProperty('--b', f1(b) + 'px'); } else { s.opacity = f2(o); s.filter = b > 0.05 ? `blur(${f1(b)}px)` : 'none'; }
+  if (it.barrido != null) { barrer(it, tl); return; }
+  if (RM ? tl > 0.3 : t > (it.res ? 6.5 / (it.res[0] * it.res[1]) : it.dur + 0.04)) {   // asentado: se deja en su reposo exacto y ya no se toca
+    if (!RM) s.transform = tf(B);
+    it.listo = true; if (it.p3d) { s.setProperty('--o', '1'); it.el.classList.add('lista'); } else { s.opacity = '1'; s.filter = 'none'; }
+  }
+}
+function barrer(it, tl) {                          // barrido de luz: una vez al rematar y luego cada 9 s
+  const br = it.br || (it.br = $('.brillo', it.el)); if (!br) return;
+  const t = tl - it.barrido, u = t < 0 || RM || (Q.quieto && t > 1) ? -1 : mod(t, 9) / 0.6;
+  if (u < 0 || u > 1) { if (it.brOn !== 0) { br.style.opacity = '0'; it.brOn = 0; } if (tl > it.t0 + it.dur + 0.1 && it.p3d) it.el.classList.add('lista'); return; }
+  it.brOn = 1; br.style.opacity = f2(Math.sin(Math.PI * u)); br.style.transform = `translate3d(${f1(lerp(-120, 400, sinIO(u)))}%,0,0) skewX(-14deg)`;
+}
+function especial(it, t, T) {
+  const p = RM ? 1 : clamp(t / it.dur);
+  if (it.tipo === 'flecha') {
+    const e = cubOut(p); it.trazo.style.strokeDasharray = `${f1(it.len)} ${f1(it.len + 4)}`; it.trazo.style.strokeDashoffset = f1(it.len * (1 - e));
+    it.trazo.style.opacity = p > 0 ? '1' : '0'; const k = clamp((p - 0.62) / 0.38), kk = resorte(k * 0.5, 13, 0.8) * (k > 0 ? 1 : 0);
+    it.punta.setAttribute('transform', `${it.tfPunta} scale(${kk.toFixed(3)})`); it.punta.style.opacity = k > 0 ? '1' : '0';
+    if (t > it.dur + 0.5) it.listo = true;
+  } else if (it.tipo === 'llena') {
+    const e = sinIO(p); it.pista.style.strokeDasharray = `${f1(it.len)} ${f1(it.len + 30)}`; it.pista.style.strokeDashoffset = f1(it.len * (1 - Math.min(1, e * 1.04 + 0.05))); it.pista.style.opacity = p > 0 ? '1' : '0';
+    it.trazo.style.strokeDasharray = `${f1(it.len)} ${f1(it.len + 30)}`; it.trazo.style.strokeDashoffset = f1(it.len * (1 - e)); it.trazo.style.opacity = p > 0 ? '1' : '0';
+    const pt = it.trazo.getPointAtLength(it.len * e), lat = 1 + (Q.quieto ? 0 : 0.14 * Math.sin(T * 3.1));
+    it.cab.setAttribute('cx', f1(pt.x)); it.cab.setAttribute('cy', f1(pt.y)); it.cab.setAttribute('r', f1((p > 0 ? 15 : 0) * lat)); it.cab.style.opacity = p > 0 ? '1' : '0';
+  } else if (it.tipo === 'orbita') {
+    const e = cubOut(p); it.o1.style.strokeDasharray = `${f1(it.len * e)} ${f1(it.len)}`; it.o1.style.opacity = p > 0 ? '.95' : '0';
+    const To = Q.quieto ? 3 : T; it.o2.style.opacity = f2(e * 0.9); it.o2.style.strokeDashoffset = f1(-To * 34);
+    const a = To * 0.55 + 2.2; it.cometa.setAttribute('cx', f1(530 + 524 * Math.cos(a))); it.cometa.setAttribute('cy', f1(133 + 127 * Math.sin(a))); it.cometa.style.opacity = f2(e);
+  }
+}
+function pintarLamina(L, tl, T, dir, qLleg) {
+  // el cuerpo entero llega con la cámara, flota apenas y gira con el puntero: una sola perspectiva para toda la lámina
+  const ry = L.ry + E.px * 2.6 - dir * 11 * qLleg, rx = L.rx - E.py * 1.8 + (Q.quieto ? 0 : Math.sin(T * 0.37 + L.i * 2) * 0.35);
+  const x = dir * 240 * qLleg - E.px * 12, y = (Q.quieto ? 0 : Math.sin(T * 0.43 + L.i) * 4) - E.py * 7;
+  L.cuerpo.style.transform = `translate3d(${f2(x)}px,${f2(y)}px,0) rotateX(${rx.toFixed(3)}deg) rotateY(${ry.toFixed(3)}deg)`;
+  if (L.titulazo && (Q.modo !== 'bajo' || !L.titulazo._k)) {                     // el canto del título sigue a la perspectiva
+    const D = (L.titulazo.classList.contains('t2') ? 42 : 70) * (RM ? 1 : 0.12 + 0.88 * cubOut((tl - 0.7) / 1.3)), ex = Math.min(-0.4, -D * Math.sin((L.titulazo._ry + ry) * Math.PI / 180)), ey = Math.max(0.3, D * Math.sin((L.titulazo._rx + rx) * Math.PI / 180)), k = f1(ex) + ',' + f1(ey);
+    if (k !== L.titulazo._k) { L.titulazo.style.setProperty('--ex', f1(ex) + 'px'); L.titulazo.style.setProperty('--ey', f1(ey) + 'px'); L.titulazo._k = k; }   // el canto crece al asentarse y sigue a la perspectiva
+  }
+  for (const it of L.piezas) if (!it.listo) aplicar(it, tl, T);
+}
+
+/* =====================================================================  CÁMARA Y ESTADO  */
+const laminas = $$('#escena > .lamina').map(preparar), N = laminas.length;
+const CAMK = ['x', 'y', 'zoom', 'giro', 'yaw', 'hora', 'calor'];
+const CAM = []; { let x = 0; laminas.forEach((L, i) => { if (i) x += L.bloque !== laminas[i - 1].bloque ? PASO_CAM * 2 : PASO_CAM; const hora = L.hora != null ? L.hora : (N > 1 ? i / (N - 1) : 0); CAM.push(i === 0 ? { x, y: 0, zoom: 1, giro: 0, yaw: 0, hora, calor: L.calor } : { x, y: 9 * Math.sin(i * 1.9), zoom: 1.035 + 0.03 * Math.sin(i * 2.3 + 0.5), giro: 0.45 * Math.sin(i * 1.7 + 1), yaw: 1.1 * Math.sin(i * 1.3), hora, calor: L.calor }); }); }
+const INTRO = { x: -430, y: 26, zoom: 1.17, giro: -1.3, yaw: 2.2, hora: -0.17, calor: 0 };
+const DUR_SAL = 0.55;
+const E = { i: 0, ant: 0, dir: 1, tNav: 0, durCam: 1.1, retraso: 0.1, camDe: CAM[0], camA: CAM[0], intro: false, salto: false, saliendo: [], px: 0, py: 0, pxo: 0, pyo: 0, hojasLimpio: false, arrancado: false };
+let t0 = performance.now(), Tfijo = null, tUlt = 0;
+const reloj = () => (Tfijo != null ? Tfijo : (performance.now() - t0) / 1000);
+const curvaCam = (u) => { u = clamp(u); const a = 0.08, v = u < a ? (u * u) / (2 * a) : u - a / 2; return expoOut(v / (1 - a / 2)); };   // expo-out con arranque suave
+function camBase(T) {
+  const u = clamp((T - E.tNav) / E.durCam), e = E.intro ? 1 - Math.pow(1 - u, 3.4) : curvaCam(u), c = { e, u };
+  for (const k of CAMK) c[k] = lerp(E.camDe[k], E.camA[k], e);
+  if (!E.intro && u < 1 && !RM) { const s = Math.sin(Math.PI * u) * (1 - u) * 1.7, f = E.salto ? 1.5 : 1; c.zoom -= 0.05 * s * f; c.giro += E.dir * 0.9 * s * f; c.y -= 16 * s; }   // a medio viaje la cámara abre y ladea
+  return c;
+}
+function pintar(T) {
+  const cam = camBase(T);
+  if (!Q.quieto) { cam.x += 9 * Math.sin(T * 0.21); cam.y += 5 * Math.sin(T * 0.17 + 1); cam.zoom += 0.006 * Math.sin(T * 0.13); }      // respiración lenta
+  cam.px = E.px; cam.py = E.py;
+  pintarMundo(cam, T);
+  const L = laminas[E.i], tl = T - E.tNav - E.retraso, qLleg = E.intro || RM ? 0 : 1 - expoOut((T - E.tNav) / 0.95);
+  pintarLamina(L, tl, T, E.dir, qLleg);
+  for (let k = E.saliendo.length - 1; k >= 0; k--) {
+    const s = E.saliendo[k], te = T - s.t0, u = clamp(te / DUR_SAL), e = cubOut(u), st = s.L.el.style;
+    if (te >= DUR_SAL || RM && te > 0.2) { s.L.el.classList.remove('viva', 'sale'); st.cssText = ''; E.saliendo.splice(k, 1); continue; }
+    if (RM) { st.opacity = f2(1 - te / 0.2); continue; }
+    st.transform = `translate3d(${f1(-s.dir * 620 * e)}px,${f1(-12 * e)}px,0) scale(${(1 - 0.2 * e).toFixed(4)})`;   // se va hacia atrás, desenfocándose
+    st.opacity = f2(Math.pow(1 - clamp(te / (DUR_SAL * 0.82)), 1.3)); if (Q.modo !== 'bajo') st.filter = `blur(${f1(18 * e)}px)`;
+    s.L.cuerpo.style.transform = `rotateY(${(s.L.ry + s.dir * 16 * e).toFixed(2)}deg) rotateX(${s.L.rx}deg)`;
+  }
+  pintarParticulas(cam, T);
+  avanceEl.style.transform = `scaleX(${((lerp(E.ant, E.i, cam.e) + 1) / N).toFixed(4)})`;
+}
+function entrar(L) {
+  L.el.classList.add('viva'); L.el.classList.remove('sale'); L.el.style.cssText = ''; medir(L);
+  for (const it of L.piezas) { it.listo = false; it.brOn = -1; if (it.p3d) it.el.classList.remove('lista'); }
+}
+function ir(n, dir) {
+  n = clamp(n, 0, N - 1); if (n === E.i || Tfijo != null) return;
+  const T = reloj(), ant = E.i, Lant = laminas[ant], L = laminas[n], cam = camBase(T);
+  E.dir = dir || (n > ant ? 1 : -1); E.salto = L.bloque !== Lant.bloque || Math.abs(n - ant) > 1;
+  E.camDe = cam; E.camA = CAM[n]; E.durCam = RM ? 0.001 : E.salto ? 1.5 : 1.1; E.retraso = RM ? 0 : E.salto ? 0.16 : 0.08; E.tNav = T; E.intro = false; E.ant = ant; E.i = n;
+  const ya = E.saliendo.findIndex((s) => s.L === L); if (ya >= 0) E.saliendo.splice(ya, 1);
+  if (!E.saliendo.some((s) => s.L === Lant)) { Lant.el.classList.add('sale'); E.saliendo.push({ L: Lant, t0: T, dir: E.dir }); }
+  entrar(L); hud();
+}
+const sig = () => ir(E.i + 1, 1), prev = () => ir(E.i - 1, -1);
+
+/* =====================================================================  HUD, TECLAS, NOTAS, EDICIÓN  */
+const pieEl = $('#pie'), cuentaEl = $('#cuenta'), avanceEl = $('#avance i'), notasEl = $('#notas'), notasTxt = $('#notas-txt'), ayudaEl = $('#ayuda');
+const dos = (n) => String(n).padStart(2, '0');
+function hud() {
+  const L = laminas[E.i]; pieEl.textContent = L.pie; cuentaEl.innerHTML = `<b>${dos(E.i + 1)}</b> / ${dos(N)}`; notasTxt.textContent = L.notas || 'Esta lámina no tiene notas.';
+  if (Tfijo == null) try { history.replaceState(null, '', '#' + (E.i + 1)); } catch (e) { /* liga sin historial */ }
+}
+function pantalla() {
+  try {
+    const d = document, el = d.documentElement;
+    if (d.fullscreenElement || d.webkitFullscreenElement) { const s = d.exitFullscreen || d.webkitExitFullscreen; if (s) { const p = s.call(d); if (p && p.catch) p.catch(() => {}); } }
+    else { const f = el.requestFullscreen || el.webkitRequestFullscreen; if (f) { const p = f.call(el); if (p && p.catch) p.catch(() => {}); } }
+  } catch (e) { /* el visor no deja: se sigue en ventana */ }
+}
+const verNotas = () => { notasEl.hidden = !notasEl.hidden; };
+function ajustar() { const k = Math.min(marco.clientWidth / W, marco.clientHeight / H) || 1; lienzo.style.transform = `scale(${k.toFixed(5)})`; }
+addEventListener('resize', ajustar);
+addEventListener('keydown', (ev) => {
+  const t = ev.target;
+  if (t && t.isContentEditable) { if (ev.key === 'Enter' || ev.key === 'Escape') { ev.preventDefault(); t.blur(); } return; }
+  if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+  switch (ev.key) {
+    case 'ArrowRight': case ' ': case 'Spacebar': case 'PageDown': case 'Enter': case 'ArrowDown': ev.preventDefault(); sig(); break;
+    case 'ArrowLeft': case 'PageUp': case 'Backspace': case 'ArrowUp': ev.preventDefault(); prev(); break;
+    case 'Home': ev.preventDefault(); ir(0); break;
+    case 'End': ev.preventDefault(); ir(N - 1); break;
+    case 'f': case 'F': pantalla(); break;
+    case 'n': case 'N': verNotas(); break;
+  }
+});
+let toque = null, sinClic = 0;
+marco.addEventListener('pointerdown', (ev) => { toque = ev.pointerType === 'touch' ? { x: ev.clientX, y: ev.clientY } : null; });
+marco.addEventListener('pointerup', (ev) => {
+  if (!toque) return; const dx = ev.clientX - toque.x, dy = ev.clientY - toque.y; toque = null;
+  if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.4) { sinClic = performance.now(); if (dx > 0) prev(); else sig(); }   // deslizar: derecha regresa, izquierda avanza
+});
+marco.addEventListener('click', (ev) => {
+  if (performance.now() - sinClic < 500) return;
+  if (ev.target.closest && ev.target.closest('.editable,#notas,a,button')) return;
+  const ae = document.activeElement; if (ae && ae.isContentEditable) { ae.blur(); return; }
+  sig();
+});
+addEventListener('pointermove', (ev) => { if (ev.pointerType === 'touch' || RM) return; E.pxo = clamp((ev.clientX / innerWidth) * 2 - 1, -1, 1); E.pyo = clamp((ev.clientY / innerHeight) * 2 - 1, -1, 1); });
+document.addEventListener('pointerleave', () => { E.pxo = 0; E.pyo = 0; });
+// datos de la portada: se escriben con clic y se guardan en este navegador
+for (const c of $$('.editable')) {
+  const clave = 'ecologia-cultural:' + c.dataset.clave;
+  c.setAttribute('contenteditable', 'true'); c.setAttribute('spellcheck', 'false'); c.setAttribute('role', 'textbox'); c.setAttribute('aria-label', c.dataset.clave); c.title = 'Clic para escribir';
+  try { const v = localStorage.getItem(clave); if (v != null) c.textContent = v; } catch (e) { /* sin almacenamiento: queda el texto por defecto */ }
+  c.addEventListener('input', () => { if (c.innerHTML === '<br>') c.textContent = ''; try { localStorage.setItem(clave, c.textContent); } catch (e) { /* no se pudo guardar */ } });
+  c.addEventListener('paste', (ev) => { ev.preventDefault(); const tx = ((ev.clipboardData || window.clipboardData).getData('text') || '').replace(/\s+/g, ' '); const sel = getSelection(); if (!sel || !sel.rangeCount) return; sel.deleteFromDocument(); sel.getRangeAt(0).insertNode(document.createTextNode(tx)); sel.collapseToEnd(); c.dispatchEvent(new Event('input')); });
+}
+
+/* =====================================================================  ARRANQUE  */
+function cuadro(ahora) {
+  if (Tfijo != null) return;
+  const T = (ahora - t0) / 1000, dt = clamp(T - tUlt, 0, 0.1); tUlt = T;
+  const k = 1 - Math.exp(-dt * 6); E.px += (E.pxo - E.px) * k; E.py += (E.pyo - E.py) * k;
+  pintar(T); medirRitmo(dt, T); requestAnimationFrame(cuadro);
+}
+function medirRitmo(dt, T) {                       // ventanas de ~0.7 s; solo se sube de calidad con la lámina en reposo
+  if (Q.fijo || document.hidden || dt <= 0 || dt > 0.5 || T < 1) { Q.n = 0; Q.s = 0; return; }
+  Q.n++; Q.s += dt; if (Q.s < 0.7 || Q.n < 6) return;
+  const medio = Q.s / Q.n, quieto = T - E.tNav > (E.intro ? 5.2 : 2.6); Q.n = 0; Q.s = 0;
+  if (Q.modo === 'base') {
+    if (medio > 0.036) { if (++Q.malas >= 2) { ponerModo('bajo'); Q.fijo = true; } }                       // menos de ~28 cuadros/s: lo mínimo
+    else { Q.malas = 0; if (quieto && medio < 0.0195 && !Q.noSube) { ponerModo('fino'); Q.prueba = 2; } }    // va sobrado: se prueba el vidrio esmerilado
+  } else if (Q.modo === 'fino') {
+    if (Q.prueba === 2) { Q.prueba = 1; return; }                                                           // la primera ventana trae la transición
+    if (Q.prueba === 1) { Q.prueba = 0; if (medio > 0.0205) { ponerModo('base'); Q.noSube = true; } return; }
+    if (medio > 0.025) { if (++Q.malas >= 2) { ponerModo('base'); Q.noSube = true; } } else Q.malas = 0;      // si después se cae (menos de 40 cuadros/s), se regresa y ahí se queda
+  }
+}
+function esperarTipos(ms) {
+  return new Promise((res) => {
+    let hecho = false; const fin = () => { if (!hecho) { hecho = true; res(); } }; setTimeout(fin, ms);
+    const l = $('#tipos');
+    const carga = () => { if (l) l.media = 'all'; const F = document.fonts; if (F && F.load) Promise.all([F.load("600 96px Fraunces"), F.load("italic 400 36px Fraunces"), F.load("400 30px 'DM Sans'"), F.load("700 30px 'DM Sans'")]).then(fin, fin); else fin(); };
+    if (!l) return fin(); if (l.sheet) carga(); else { l.addEventListener('load', carga); l.addEventListener('error', fin); }
+  });
+}
+function congelar(n, seg) {                        // deja la lámina n (1…N) en el segundo seg de su entrada
+  n = clamp(Math.round(n) || 1, 1, N); seg = Math.max(0, +seg || 0);
+  if (!Q.fijo) { ponerModo('fino'); Q.fijo = true; }
+  Tfijo = seg; raiz.classList.add('congelado'); raiz.style.setProperty('--T', (seg + 40 * (n - 1)).toFixed(3));
+  for (const L of laminas) { L.el.classList.remove('viva', 'sale'); L.el.style.cssText = ''; }
+  E.saliendo = []; E.px = E.py = E.pxo = E.pyo = 0; E.i = n - 1; E.tNav = 0; E.dir = 1; E.hojasLimpio = false;
+  if (n === 1) { E.intro = !RM; E.ant = 0; E.camDe = RM ? CAM[0] : INTRO; E.camA = CAM[0]; E.durCam = RM ? 0.001 : 4.6; E.retraso = 0; E.salto = true; }
+  else {
+    const A = laminas[n - 2], B = laminas[n - 1]; E.intro = false; E.ant = n - 2; E.salto = A.bloque !== B.bloque; E.camDe = CAM[n - 2]; E.camA = CAM[n - 1];
+    E.durCam = RM ? 0.001 : E.salto ? 1.5 : 1.1; E.retraso = RM ? 0 : E.salto ? 0.16 : 0.08;
+    entrar(A); pintarLamina(A, 99, seg, 1, 0); A.el.classList.add('sale'); E.saliendo.push({ L: A, t0: 0, dir: 1 });
+  }
+  entrar(laminas[n - 1]); hud(); ult.hora = 99; pintar(seg + 0);
+}
+window.__ir = (n, seg) => { if (seg == null) { if (Tfijo != null) return congelar(n, 9); ir(n - 1); } else congelar(n, seg); };
+window.__estado = () => {
+  const L = laminas[E.i], asent = (it) => it.t0 + (it.esp ? it.dur : it.res ? 4.6 / (it.res[0] * it.res[1]) : it.dur);   // resorte: asentado a ±1 %
+  return { lamina: E.i + 1, total: N, calidad: Q.modo, congelado: Tfijo != null, rm: RM, id: L.el.id, notas: !notasEl.hidden,
+    finEntrada: +(E.retraso + Math.max(...L.piezas.map((it) => (it.barrido != null ? Math.max(asent(it), it.barrido + 0.6) : asent(it))))).toFixed(2),
+    pendientes: L.piezas.filter((it) => !it.listo && !it.esp && it.barrido == null).length };
+};
+
+construirMundo(); solEl = $('#sol'); haloEl = $('#halo'); rayosEl = $('#rayos'); calorEl = $('#calor'); prepararParticulas(); ajustar();
+const sQ = parseInt(consulta.get('s') || '', 10), tQ = parseFloat(consulta.get('t') || '');
+const n0 = clamp((parseInt((location.hash || '').replace('#', ''), 10) || 1) - 1, 0, N - 1);
+if (sQ >= 1 && !isNaN(tQ)) congelar(sQ, tQ);
+else {                                             // cuadro 0 a la vista mientras llegan las fuentes
+  E.i = n0; E.ant = n0; entrar(laminas[n0]); hud();
+  if (n0 === 0 && !RM) { E.intro = true; E.camDe = INTRO; E.camA = CAM[0]; E.durCam = 4.6; E.retraso = 0; E.salto = true; }
+  else { E.intro = false; E.camDe = E.camA = CAM[n0]; E.durCam = 0.001; E.retraso = 0.05; }
+  Tfijo = 0; pintar(0);
+}
+window.__listo = esperarTipos(1100).then(() => {
+  if (sQ >= 1 && !isNaN(tQ)) { congelar(sQ, tQ); return; }
+  Tfijo = null; t0 = performance.now(); tUlt = 0; E.arrancado = true; requestAnimationFrame(cuadro);
+  ayudaEl.classList.add('ver'); setTimeout(() => ayudaEl.classList.remove('ver'), 4000);
+});
+if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', () => {   // si las fuentes llegan tarde, se vuelve a medir
+  for (const L of laminas) if (L.el.classList.contains('viva')) medir(L);
+  if (Tfijo != null && E.arrancado === false && sQ >= 1) congelar(E.i + 1, Tfijo);
+});
+})();
+</script>
+</body>
+</html>
